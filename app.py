@@ -83,6 +83,13 @@ class ProfileForm(FlaskForm):
     profile_picture = FileField('Profile Picture')
     submit = SubmitField('Create Profile')
 
+class SettingsForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    current_password = PasswordField('Current Password', validators=[DataRequired()])
+    new_password = PasswordField('New Password', validators=[DataRequired(), Length(min=6)])
+    confirm_new_password = PasswordField('Confirm New Password', validators=[DataRequired(), EqualTo('new_password')])
+    submit = SubmitField('Update Settings')
+
 # Routes
 @app.route('/')
 def home():
@@ -266,6 +273,34 @@ def generate_qr(data, filename):
     img.save(file_path)
     
     return file_path
+
+@app.route('/settings', methods=['GET', 'POST'])
+@login_required
+def settings():
+    form = SettingsForm()
+    if form.validate_on_submit():
+        user = User.query.get(current_user.id)
+        
+        # Check if the current password is correct
+        if not check_password_hash(user.password, form.current_password.data):
+            flash('Current password is incorrect.', 'danger')
+            return redirect(url_for('settings'))
+        
+        # Update email
+        user.email = form.email.data
+        
+        # Update password if provided
+        if form.new_password.data:
+            user.password = generate_password_hash(form.new_password.data, method='pbkdf2:sha256')
+        
+        db.session.commit()
+        flash('Your settings have been updated!', 'success')
+        return redirect(url_for('dashboard'))
+    
+    elif request.method == 'GET':
+        form.email.data = current_user.email
+    
+    return render_template('settings.html', form=form)
 
 # Run the app
 if __name__ == '__main__':
