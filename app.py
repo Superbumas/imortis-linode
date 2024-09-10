@@ -356,6 +356,24 @@ def disclaimer():
 def imortis():
     return render_template('imortis.html')
 
+@app.route('/delete_profile/<int:profile_id>', methods=['POST'])
+@login_required
+def delete_profile(profile_id):
+    profile = Profile.query.get_or_404(profile_id)
+    if profile.user_id != current_user.id:
+        flash('You do not have permission to delete this profile.', 'danger')
+        return redirect(url_for('dashboard'))
+    
+    try:
+        db.session.delete(profile)
+        db.session.commit()
+        flash('Profile deleted successfully!', 'success')
+    except Exception as e:
+        db.session.rollback()
+        flash(f'An error occurred while deleting the profile: {str(e)}', 'danger')
+    
+    return redirect(url_for('dashboard'))
+
 
 
 # Run the app
