@@ -3,10 +3,9 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, TextAreaField, SubmitField, PasswordField, DateField, FileField, FieldList, FormField
-from wtforms.validators import DataRequired, Length, ValidationError, EqualTo
+from wtforms.validators import DataRequired, Length, ValidationError, EqualTo, Email
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
-from wtforms.validators import DataRequired, Email, EqualTo
 import qrcode
 from datetime import datetime
 import os
@@ -240,10 +239,6 @@ def delete_profile(profile_id):
         return redirect(url_for('dashboard'))
     
     try:
-        # Delete associated timelines
-        Timeline.query.filter_by(profile_id=profile.id).delete()
-        
-        # Delete the profile
         db.session.delete(profile)
         db.session.commit()
         flash('Profile deleted successfully!', 'success')
@@ -252,6 +247,7 @@ def delete_profile(profile_id):
         flash(f'An error occurred while deleting the profile: {str(e)}', 'danger')
     
     return redirect(url_for('dashboard'))
+
 
 @app.route('/api/profiles')
 @login_required
