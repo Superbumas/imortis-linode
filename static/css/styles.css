@@ -184,3 +184,4 @@ th {
         padding: 8px;
     }
 }
+.min-w-full { min-width: 100%; }
