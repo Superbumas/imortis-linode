@@ -1,87 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Profile</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-</head>
-<body class="bg-gray-100 text-gray-900">
-    <header class="bg-gray-800 shadow">
-        <div class="container mx-auto p-4 flex justify-between items-center">
-            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="h-10">
-            <nav class="text-white">
-                <a href="{{ url_for('register') }}" class="hover:underline mx-2">Register</a>
-                <a href="{{ url_for('login') }}" class="hover:underline mx-2">Login</a>
-                <a href="{{ url_for('dashboard') }}" class="hover:underline mx-2">Dashboard</a>
-            </nav>
+{% extends "base.html" %}
+
+{% block title %}Edit Profile{% endblock %}
+
+{% block content %}
+<div class="container mx-auto p-5 w-full">
+    <h2 class="text-2xl font-bold mb-4">Edit Profile</h2>
+    <form action="{{ url_for('update_profile', profile_id=profile.id) }}" method="post" class="bg-white p-6 rounded-lg shadow-md">
+        <div class="mb-4">
+            <label for="name" class="block text-gray-700 font-bold mb-2">Name</label>
+            <input type="text" id="name" name="name" value="{{ profile.name }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
         </div>
-    </header>
-    <main class="container mx-auto p-4">
-        <div class="max-w-md mx-auto bg-white p-8 rounded-lg shadow-md">
-            <h2 class="text-2xl font-bold mb-4">Edit Profile</h2>
-            <form method="POST" enctype="multipart/form-data">
-                {{ form.hidden_tag() }}
-                <div class="mb-4">
-                    <label class="block text-gray-700">{{ form.name.label }}</label>
-                    {{ form.name(class="w-full px-3 py-2 border rounded-lg", size=32) }}
-                    {% for error in form.name.errors %}
-                        <span class="text-red-500 text-sm">[{{ error }}]</span>
-                    {% endfor %}
-                </div>
-                <div class="mb-4">
-                    <label class="block text-gray-700">{{ form.bio.label }}</label>
-                    {{ form.bio(class="w-full px-3 py-2 border rounded-lg", rows=4, cols=40) }}
-                    {% for error in form.bio.errors %}
-                        <span class="text-red-500 text-sm">[{{ error }}]</span>
-                    {% endfor %}
-                </div>
-                <div class="mb-4">
-                    <label class="block text-gray-700">{{ form.date_of_birth.label }}</label>
-                    {{ form.date_of_birth(class="w-full px-3 py-2 border rounded-lg", type="date") }}
-                    {% for error in form.date_of_birth.errors %}
-                        <span class="text-red-500 text-sm">[{{ error }}]</span>
-                    {% endfor %}
-                </div>
-                <div class="mb-4">
-                    <label class="block text-gray-700">{{ form.date_of_death.label }}</label>
-                    {{ form.date_of_death(class="w-full px-3 py-2 border rounded-lg", type="date") }}
-                    {% for error in form.date_of_death.errors %}
-                        <span class="text-red-500 text-sm">[{{ error }}]</span>
-                    {% endfor %}
-                </div>
-                <div class="mb-4">
-                    <label class="block text-gray-700">{{ form.profile_picture.label }}</label>
-                    {{ form.profile_picture(class="w-full px-3 py-2 border rounded-lg") }}
-                    {% for error in form.profile_picture.errors %}
-                        <span class="text-red-500 text-sm">[{{ error }}]</span>
-                    {% endfor %}
-                </div>
-                <div class="mb-4">
-                    <h3 class="text-xl font-bold mb-2">Timeline</h3>
-                    {% for timeline_form in form.timelines %}
-                        <div class="mb-4">
-                            <label class="block text-gray-700">{{ timeline_form.date.label }}</label>
-                            {{ timeline_form.date(class="w-full px-3 py-2 border rounded-lg", type="date") }}
-                            {% for error in timeline_form.date.errors %}
-                                <span class="text-red-500 text-sm">[{{ error }}]</span>
-                            {% endfor %}
-                        </div>
-                        <div class="mb-4">
-                            <label class="block text-gray-700">{{ timeline_form.event.label }}</label>
-                            {{ timeline_form.event(class="w-full px-3 py-2 border rounded-lg", size=32) }}
-                            {% for error in timeline_form.event.errors %}
-                                <span class="text-red-500 text-sm">[{{ error }}]</span>
-                            {% endfor %}
-                        </div>
-                    {% endfor %}
-                </div>
-                <div>
-                    {{ form.submit(class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded") }}
-                </div>
-            </form>
+        <div class="mb-4">
+            <label for="bio" class="block text-gray-700 font-bold mb-2">Bio</label>
+            <textarea id="bio" name="bio" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>{{ profile.bio }}</textarea>
         </div>
-    </main>
-</body>
-</html>
+        <div class="mb-4">
+            <label for="date_of_birth" class="block text-gray-700 font-bold mb-2">Date of Birth</label>
+            <input type="date" id="date_of_birth" name="date_of_birth" value="{{ profile.date_of_birth }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+        </div>
+        <div class="mb-4">
+            <label for="date_of_death" class="block text-gray-700 font-bold mb-2">Date of Death</label>
+            <input type="date" id="date_of_death" name="date_of_death" value="{{ profile.date_of_death }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        </div>
+        <div class="flex items-center justify-between">
+            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Save Changes</button>
+            <a href="{{ url_for('dashboard') }}" class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
