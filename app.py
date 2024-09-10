@@ -8,6 +8,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from wtforms.validators import DataRequired, Email, EqualTo
 import qrcode
+from datetime import datetime
 import os
 import base64
 import logging
@@ -46,6 +47,11 @@ class Profile(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     user = db.relationship('User', backref=db.backref('profiles', lazy=True))
     timelines = db.relationship('Timeline', backref='profile', lazy=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+
+
 
 class Timeline(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -346,7 +352,7 @@ def disclaimer():
 def imortis():
     return render_template('imortis.html')
 
-    
+
 
 # Run the app
 if __name__ == '__main__':
