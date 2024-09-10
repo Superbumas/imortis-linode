@@ -1,25 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flask-Vue Project</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-</head>
-<body>
-    <header>
-        <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo">
-    </header>
-    <nav>
-        <a href="{{ url_for('register') }}">Register</a>
-        <a href="{{ url_for('login') }}">Login</a>
-        <a href="{{ url_for('dashboard') }}">Dashboard</a>
-    </nav>
-    <div class="container">
-        <div id="app"></div>
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="container mx-auto p-5 w-full">
+    <div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md">
+        <h2 class="text-2xl font-bold mb-4">Welcome to the Social Site for the Deceased</h2>
+        <p class="mb-4">This is a platform where you can create and manage profiles for your loved ones who have passed away. Share their stories, memories, and keep their legacy alive.</p>
+        <div class="flex space-x-4">
+            <a href="{{ url_for('register') }}" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Register</a>
+            <a href="{{ url_for('login') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Login</a>
+        </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="{{ url_for('static', filename='app.js') }}"></script>
-</body>
-</html>
+</div>
+{% endblock %}
