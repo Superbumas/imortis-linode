@@ -21,6 +21,15 @@
     <main class="container mx-auto p-4">
         <div class="max-w-md mx-auto bg-white p-8 rounded-lg shadow-md">
             <h2 class="text-2xl font-bold mb-4">Create Profile</h2>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <ul class="mb-4">
+                        {% for category, message in messages %}
+                            <li class="text-{{ 'red' if category == 'danger' else 'green' }}-500">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endwith %}
             <form method="POST" enctype="multipart/form-data">
                 {{ form.hidden_tag() }}
                 <div class="mb-4">
@@ -46,23 +55,4 @@
                 </div>
                 <div class="mb-4">
                     <label class="block text-gray-700">{{ form.date_of_death.label }}</label>
-                    {{ form.date_of_death(class="w-full px-3 py-2 border rounded-lg", type="date") }}
-                    {% for error in form.date_of_death.errors %}
-                        <span class="text-red-500 text-sm">[{{ error }}]</span>
-                    {% endfor %}
-                </div>
-                <div class="mb-4">
-                    <label class="block text-gray-700">{{ form.profile_picture.label }}</label>
-                    {{ form.profile_picture(class="w-full px-3 py-2 border rounded-lg") }}
-                    {% for error in form.profile_picture.errors %}
-                        <span class="text-red-500 text-sm">[{{ error }}]</span>
-                    {% endfor %}
-                </div>
-                <div>
-                    {{ form.submit(class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded") }}
-                </div>
-            </form>
-        </div>
-    </main>
-</body>
-</html>
+                    {{ form.date_of_death(class
