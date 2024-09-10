@@ -26,9 +26,8 @@
     <nav class="bg-gray-200 py-4">
         <div class="container mx-auto px-4">
             <ul class="flex justify-center space-x-4">
-                <li><a class="text-coolGray-500 hover:text-coolGray-900 font-medium" href="{{ url_for('home') }}">Home</a></li>
-                {% if current_user.is_authenticated %}
                 <li><a class="text-coolGray-500 hover:text-coolGray-900 font-medium" href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                {% if current_user.is_authenticated %}
                     <li><a class="text-coolGray-500 hover:text-coolGray-900 font-medium" href="{{ url_for('settings') }}">Settings</a></li>
                     <li><a class="text-coolGray-500 hover:text-coolGray-900 font-medium" href="{{ url_for('logout') }}">Logout</a></li>
                 {% else %}
@@ -52,6 +51,25 @@
         </div>
         {% block content %}{% endblock %}
     </main>
+    <footer class="bg-gray-800 text-white py-6">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center">
+                <div>
+                    <a href="{{ url_for('home') }}">
+                        <img class="h-10" src="{{ url_for('static', filename='imortislogo.png') }}" alt="Logo">
+                    </a>
+                </div>
+                <div class="flex space-x-4">
+                    <a href="{{ url_for('about') }}" class="text-gray-400 hover:text-white">About Us</a>
+                    <a href="{{ url_for('contact') }}" class="text-gray-400 hover:text-white">Contact</a>
+                    <a href="{{ url_for('privacy') }}" class="text-gray-400 hover:text-white">Privacy Policy</a>
+                </div>
+                <div class="text-gray-400">
+                    &copy; 2023 My Website. All rights reserved.
+                </div>
+            </div>
+        </div>
+    </footer>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const flashMessages = document.getElementById('flash-messages');
