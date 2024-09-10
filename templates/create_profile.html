@@ -1,77 +1,61 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Profile</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-</head>
-<body class="bg-gray-100 text-gray-900">
-    <header class="bg-gray-800 shadow">
-        <div class="container mx-auto p-4 flex justify-between items-center">
-            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="h-10">
-            <nav class="text-white">
-                <a href="{{ url_for('register') }}" class="hover:underline mx-2">Register</a>
-                <a href="{{ url_for('login') }}" class="hover:underline mx-2">Login</a>
-                <a href="{{ url_for('dashboard') }}" class="hover:underline mx-2">Dashboard</a>
-            </nav>
-        </div>
-    </header>
-    <main class="container mx-auto p-4">
-        <div class="max-w-md mx-auto bg-white p-8 rounded-lg shadow-md">
-            <h2 class="text-2xl font-bold mb-4">Create Profile</h2>
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    <ul class="mb-4">
-                        {% for category, message in messages %}
-                            <li class="text-{{ 'red' if category == 'danger' else 'green' }}-500">{{ message }}</li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
-            {% endwith %}
-            <form method="POST" enctype="multipart/form-data">
-                {{ form.hidden_tag() }}
-                <div class="mb-4">
-                    <label class="block text-gray-700">{{ form.name.label }}</label>
-                    {{ form.name(class="w-full px-3 py-2 border rounded-lg", size=32) }}
-                    {% for error in form.name.errors %}
-                        <span class="text-red-500 text-sm">[{{ error }}]</span>
+{% extends "base.html" %}
+
+{% block title %}Create Profile{% endblock %}
+
+{% block content %}
+<div class="container mx-auto p-5 w-full">
+    <div class="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-md">
+        <h2 class="text-2xl font-bold mb-4">Create Profile</h2>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul class="mb-4">
+                    {% for category, message in messages %}
+                        <li class="text-{{ 'red' if category == 'danger' else 'green' }}-500">{{ message }}</li>
                     {% endfor %}
-                </div>
-                <div class="mb-4">
-                    <label class="block text-gray-700">{{ form.bio.label }}</label>
-                    {{ form.bio(class="w-full px-3 py-2 border rounded-lg", rows=4, cols=40) }}
-                    {% for error in form.bio.errors %}
-                        <span class="text-red-500 text-sm">[{{ error }}]</span>
-                    {% endfor %}
-                </div>
-                <div class="mb-4">
-                    <label class="block text-gray-700">{{ form.date_of_birth.label }}</label>
-                    {{ form.date_of_birth(class="w-full px-3 py-2 border rounded-lg", type="date") }}
-                    {% for error in form.date_of_birth.errors %}
-                        <span class="text-red-500 text-sm">[{{ error }}]</span>
-                    {% endfor %}
-                </div>
-                <div class="mb-4">
-                    <label class="block text-gray-700">{{ form.date_of_death.label }}</label>
-                    {{ form.date_of_death(class="w-full px-3 py-2 border rounded-lg", type="date") }}
-                    {% for error in form.date_of_death.errors %}
-                        <span class="text-red-500 text-sm">[{{ error }}]</span>
-                    {% endfor %}
-                </div>
-                <div class="mb-4">
-                    <label class="block text-gray-700">{{ form.profile_picture.label }}</label>
-                    {{ form.profile_picture(class="w-full px-3 py-2 border rounded-lg") }}
-                    {% for error in form.profile_picture.errors %}
-                        <span class="text-red-500 text-sm">[{{ error }}]</span>
-                    {% endfor %}
-                </div>
-                <div>
-                    {{ form.submit(class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded") }}
-                </div>
-            </form>
-        </div>
-    </main>
-</body>
-</html>
+                </ul>
+            {% endif %}
+        {% endwith %}
+        <form method="POST" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+            <div class="mb-4">
+                <label class="block text-gray-700">{{ form.name.label }}</label>
+                {{ form.name(class="w-full px-3 py-2 border rounded-lg", size=32) }}
+                {% for error in form.name.errors %}
+                    <span class="text-red-500 text-sm">[{{ error }}]</span>
+                {% endfor %}
+            </div>
+            <div class="mb-4">
+                <label class="block text-gray-700">{{ form.bio.label }}</label>
+                {{ form.bio(class="w-full px-3 py-2 border rounded-lg", rows=4, cols=40) }}
+                {% for error in form.bio.errors %}
+                    <span class="text-red-500 text-sm">[{{ error }}]</span>
+                {% endfor %}
+            </div>
+            <div class="mb-4">
+                <label class="block text-gray-700">{{ form.date_of_birth.label }}</label>
+                {{ form.date_of_birth(class="w-full px-3 py-2 border rounded-lg", type="date") }}
+                {% for error in form.date_of_birth.errors %}
+                    <span class="text-red-500 text-sm">[{{ error }}]</span>
+                {% endfor %}
+            </div>
+            <div class="mb-4">
+                <label class="block text-gray-700">{{ form.date_of_death.label }}</label>
+                {{ form.date_of_death(class="w-full px-3 py-2 border rounded-lg", type="date") }}
+                {% for error in form.date_of_death.errors %}
+                    <span class="text-red-500 text-sm">[{{ error }}]</span>
+                {% endfor %}
+            </div>
+            <div class="mb-4">
+                <label class="block text-gray-700">{{ form.profile_picture.label }}</label>
+                {{ form.profile_picture(class="w-full px-3 py-2 border rounded-lg") }}
+                {% for error in form.profile_picture.errors %}
+                    <span class="text-red-500 text-sm">[{{ error }}]</span>
+                {% endfor %}
+            </div>
+            <div>
+                {{ form.submit(class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded") }}
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
