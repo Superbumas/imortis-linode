@@ -78,7 +78,6 @@ class ProfileForm(FlaskForm):
     date_of_birth = DateField('Date of Birth', format='%Y-%m-%d', validators=[DataRequired()])
     date_of_death = DateField('Date of Death', format='%Y-%m-%d', validators=[DataRequired()])
     profile_picture = FileField('Profile Picture')
-    timelines = FieldList(FormField(TimelineForm), min_entries=1, max_entries=10)
     submit = SubmitField('Create Profile')
 
 # Routes

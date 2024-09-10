@@ -58,25 +58,6 @@
                         <span class="text-red-500 text-sm">[{{ error }}]</span>
                     {% endfor %}
                 </div>
-                <div class="mb-4">
-                    <h3 class="text-xl font-bold mb-2">Timeline</h3>
-                    {% for timeline_form in form.timelines %}
-                        <div class="mb-4">
-                            <label class="block text-gray-700">{{ timeline_form.date.label }}</label>
-                            {{ timeline_form.date(class="w-full px-3 py-2 border rounded-lg", type="date") }}
-                            {% for error in timeline_form.date.errors %}
-                                <span class="text-red-500 text-sm">[{{ error }}]</span>
-                            {% endfor %}
-                        </div>
-                        <div class="mb-4">
-                            <label class="block text-gray-700">{{ timeline_form.event.label }}</label>
-                            {{ timeline_form.event(class="w-full px-3 py-2 border rounded-lg", size=32) }}
-                            {% for error in timeline_form.event.errors %}
-                                <span class="text-red-500 text-sm">[{{ error }}]</span>
-                            {% endfor %}
-                        </div>
-                    {% endfor %}
-                </div>
                 <div>
                     {{ form.submit(class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded") }}
                 </div>
