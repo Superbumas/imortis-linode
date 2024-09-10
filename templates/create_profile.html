@@ -27,11 +27,23 @@
         </div>
         <div class="mb-4">
             {{ form.profile_picture.label(class="block text-gray-700 text-sm font-bold mb-2") }}
-            {{ form.profile_picture(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline") }}
+            <div class="relative">
+                <input type="file" id="file-upload" name="profile_picture" class="hidden">
+                <label for="file-upload" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer">
+                    Choose File
+                </label>
+                <span id="file-name" class="ml-2 text-gray-700">No file chosen</span>
+            </div>
         </div>
         <div class="flex items-center justify-between">
             {{ form.submit(class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline") }}
         </div>
     </form>
 </div>
+<script>
+    document.getElementById('file-upload').addEventListener('change', function() {
+        var fileName = this.files[0] ? this.files[0].name : 'No file chosen';
+        document.getElementById('file-name').textContent = fileName;
+    });
+</script>
 {% endblock %}
