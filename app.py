@@ -96,7 +96,7 @@ def home():
     return render_template('index.html')
 
 @app.route('/home')
-def home():
+def homee():
     return render_template('index.html')
 
 @app.route('/register', methods=['GET', 'POST'])
