@@ -100,6 +100,9 @@ class SettingsForm(FlaskForm):
     confirm_new_password = PasswordField('Confirm New Password', validators=[DataRequired(), EqualTo('new_password')])
     submit = SubmitField('Update Settings')
 
+class DeleteProfileForm(FlaskForm):
+    submit = SubmitField('Delete')
+
 # Routes
 @app.route('/')
 def home():
