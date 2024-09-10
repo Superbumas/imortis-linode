@@ -13,6 +13,7 @@ import os
 import base64
 import logging
 import io
+from forms import DeleteProfileForm, ProfileForm
 
 # Flask app configuration
 app = Flask(__name__)
