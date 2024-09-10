@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, flash, jsonify, request, session
+from flask import Flask, render_template, redirect, url_for, flash, jsonify, request, session, abort
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask_wtf import FlaskForm
@@ -170,57 +170,27 @@ def view_profile(profile_name):
     profile = Profile.query.filter_by(name=profile_name).first_or_404()
     return render_template('view_profile.html', profile=profile)
 
-@app.route('/edit_profile/<profile_name>', methods=['GET', 'POST'])
+@app.route('/update_profile/<int:profile_id>', methods=['POST'])
 @login_required
-def edit_profile(profile_name):
-    profile = Profile.query.filter_by(name=profile_name).first_or_404()
+def update_profile(profile_id):
+    profile = Profile.query.get_or_404(profile_id)
     if profile.user_id != current_user.id:
-        flash('You do not have permission to edit this profile.', 'danger')
-        return redirect(url_for('dashboard'))
-    
-    form = ProfileForm(obj=profile)
-    
-    # Populate timelines in the form
-    if request.method == 'GET':
-        for timeline in profile.timelines:
-            form.timelines.append_entry({
-                'date': timeline.date,
-                'event': timeline.event
-            })
-    
+        abort(403)
+    form = ProfileForm()
     if form.validate_on_submit():
-        try:
-            profile.name = form.name.data
-            profile.bio = form.bio.data
-            profile.date_of_birth = form.date_of_birth.data
-            profile.date_of_death = form.date_of_death.data
-            
-            if form.profile_picture.data:
-                filename = secure_filename(form.profile_picture.data.filename)
-                upload_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-                os.makedirs(os.path.dirname(upload_path), exist_ok=True)
-                form.profile_picture.data.save(upload_path)
-                profile.profile_picture = filename
-            
-            db.session.commit()
-
-            # Update timelines
-            Timeline.query.filter_by(profile_id=profile.id).delete()
-            for timeline_form in form.timelines:
-                new_timeline = Timeline(
-                    date=timeline_form.date.data,
-                    event=timeline_form.event.data,
-                    profile_id=profile.id
-                )
-                db.session.add(new_timeline)
-            
-            db.session.commit()
-            flash('Profile updated successfully!', 'success')
-            return redirect(url_for('dashboard'))
-        except Exception as e:
-            db.session.rollback()
-            flash(f'An error occurred: {str(e)}', 'danger')
-    
+        profile.name = form.name.data
+        profile.bio = form.bio.data
+        profile.date_of_birth = form.date_of_birth.data
+        profile.date_of_death = form.date_of_death.data
+        if form.profile_picture.data:
+            filename = secure_filename(form.profile_picture.data.filename)
+            upload_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            os.makedirs(os.path.dirname(upload_path), exist_ok=True)
+            form.profile_picture.data.save(upload_path)
+            profile.profile_picture = filename
+        db.session.commit()
+        flash('Your profile has been updated!', 'success')
+        return redirect(url_for('dashboard'))
     return render_template('edit_profile.html', form=form, profile=profile)
 
 @app.route('/delete_profile/<int:profile_id>', methods=['POST'])

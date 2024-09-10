@@ -5,22 +5,26 @@
 {% block content %}
 <div class="container mx-auto p-5 w-full">
     <h2 class="text-2xl font-bold mb-4">Edit Profile</h2>
-    <form action="{{ url_for('update_profile', profile_id=profile.id) }}" method="post" class="bg-white p-6 rounded-lg shadow-md">
+    <form action="{{ url_for('update_profile', profile_id=profile.id) }}" method="post" enctype="multipart/form-data" class="bg-white p-6 rounded-lg shadow-md">
         <div class="mb-4">
             <label for="name" class="block text-gray-700 font-bold mb-2">Name</label>
-            <input type="text" id="name" name="name" value="{{ profile.name }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+            <input type="text" id="name" name="name" value="{{ form.name.data }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
         </div>
         <div class="mb-4">
             <label for="bio" class="block text-gray-700 font-bold mb-2">Bio</label>
-            <textarea id="bio" name="bio" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>{{ profile.bio }}</textarea>
+            <textarea id="bio" name="bio" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>{{ form.bio.data }}</textarea>
         </div>
         <div class="mb-4">
             <label for="date_of_birth" class="block text-gray-700 font-bold mb-2">Date of Birth</label>
-            <input type="date" id="date_of_birth" name="date_of_birth" value="{{ profile.date_of_birth }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+            <input type="date" id="date_of_birth" name="date_of_birth" value="{{ form.date_of_birth.data }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
         </div>
         <div class="mb-4">
             <label for="date_of_death" class="block text-gray-700 font-bold mb-2">Date of Death</label>
-            <input type="date" id="date_of_death" name="date_of_death" value="{{ profile.date_of_death }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            <input type="date" id="date_of_death" name="date_of_death" value="{{ form.date_of_death.data }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        </div>
+        <div class="mb-4">
+            <label for="profile_picture" class="block text-gray-700 font-bold mb-2">Profile Picture</label>
+            <input type="file" id="profile_picture" name="profile_picture" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
         </div>
         <div class="flex items-center justify-between">
             <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Save Changes</button>
