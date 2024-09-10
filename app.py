@@ -8,6 +8,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 import qrcode
 from datetime import datetime
+from forms import DeleteProfileForm, ProfileForm
 import os
 import base64
 import logging
@@ -153,7 +154,8 @@ def logout():
 @login_required
 def dashboard():
     profiles = Profile.query.filter_by(user_id=current_user.id).all()
-    return render_template('dashboard.html', profiles=profiles)
+    delete_form = DeleteProfileForm()
+    return render_template('dashboard.html', profiles=profiles, form=delete_form)
 
 @app.route('/create_profile', methods=['GET', 'POST'])
 @login_required
