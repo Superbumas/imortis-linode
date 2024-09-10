@@ -5,127 +5,69 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Profile</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <style>
-        .form-group {
-            margin-bottom: 15px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-        }
-        .form-group input, .form-group textarea, .form-group select {
-            width: 100%;
-            padding: 8px;
-            box-sizing: border-box;
-        }
-        .form-group .error {
-            color: red;
-            display: none; /* Hide error messages */
-        }
-        nav ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        nav ul li {
-            display: inline;
-            margin-right: 10px;
-        }
-    </style>
 </head>
 <body>
-    {% include '_navbar.html' %}
     <div id="app">
-        <create-profile></create-profile>
+        <form method="POST" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+            <div>
+                {{ form.name.label }}<br>
+                {{ form.name(size=32) }}<br>
+                {% for error in form.name.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+            </div>
+            <div>
+                {{ form.bio.label }}<br>
+                {{ form.bio(rows=4, cols=40) }}<br>
+                {% for error in form.bio.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+            </div>
+            <div>
+                {{ form.date_of_birth.label }}<br>
+                {{ form.date_of_birth(type="date") }}<br>
+                {% for error in form.date_of_birth.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+            </div>
+            <div>
+                {{ form.date_of_death.label }}<br>
+                {{ form.date_of_death(type="date") }}<br>
+                {% for error in form.date_of_death.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+            </div>
+            <div>
+                {{ form.profile_picture.label }}<br>
+                {{ form.profile_picture }}<br>
+                {% for error in form.profile_picture.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+            </div>
+            <div>
+                <h3>Timeline</h3>
+                {% for timeline_form in form.timelines %}
+                    <div>
+                        {{ timeline_form.date.label }}<br>
+                        {{ timeline_form.date(type="date") }}<br>
+                        {% for error in timeline_form.date.errors %}
+                            <span style="color: red;">[{{ error }}]</span>
+                        {% endfor %}
+                    </div>
+                    <div>
+                        {{ timeline_form.event.label }}<br>
+                        {{ timeline_form.event(size=32) }}<br>
+                        {% for error in timeline_form.event.errors %}
+                            <span style="color: red;">[{{ error }}]</span>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+            <div>
+                {{ form.submit() }}
+            </div>
+        </form>
     </div>
-
-    <script>
-        Vue.component('create-profile', {
-            data: function() {
-                return {
-                    form: {
-                        name: '',
-                        bio: '',
-                        date_of_birth: '',
-                        date_of_death: '',
-                        profile_picture: null,
-                        timelines: [{ date: '', event: '' }]
-                    },
-                    errors: {}
-                }
-            },
-            methods: {
-                addTimeline() {
-                    this.form.timelines.push({ date: '', event: '' });
-                },
-                removeTimeline(index) {
-                    this.form.timelines.splice(index, 1);
-                },
-                handleFileUpload(event) {
-                    this.form.profile_picture = event.target.files[0];
-                },
-                submitForm() {
-                    let formData = new FormData();
-                    for (let key in this.form) {
-                        if (key === 'timelines') {
-                            formData.append(key, JSON.stringify(this.form[key]));
-                        } else {
-                            formData.append(key, this.form[key]);
-                        }
-                    }
-                    axios.post('/create_profile', formData)
-                        .then(response => {
-                            alert('Profile created successfully!');
-                        })
-                        .catch(error => {
-                            this.errors = error.response.data.errors;
-                        });
-                }
-            },
-            template: `
-                <form @submit.prevent="submitForm" enctype="multipart/form-data">
-                    <div class="form-group">
-                        <label for="name">Name</label>
-                        <input type="text" v-model="form.name" id="name">
-                    </div>
-                    <div class="form-group">
-                        <label for="bio">Bio</label>
-                        <textarea v-model="form.bio" id="bio"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="date_of_birth">Date of Birth</label>
-                        <input type="date" v-model="form.date_of_birth" id="date_of_birth">
-                    </div>
-                    <div class="form-group">
-                        <label for="date_of_death">Date of Death</label>
-                        <input type="date" v-model="form.date_of_death" id="date_of_death">
-                    </div>
-                    <div class="form-group">
-                        <label for="profile_picture">Profile Picture</label>
-                        <input type="file" @change="handleFileUpload" id="profile_picture">
-                    </div>
-                    <div class="form-group">
-                        <h3>Timeline</h3>
-                        <div v-for="(timeline, index) in form.timelines" :key="index">
-                            <label for="timeline_date">Date</label>
-                            <input type="date" v-model="timeline.date" :id="'timeline_date_' + index">
-                            <label for="timeline_event">Event</label>
-                            <input type="text" v-model="timeline.event" :id="'timeline_event_' + index">
-                            <button type="button" @click="removeTimeline(index)">Remove</button>
-                        </div>
-                        <button type="button" @click="addTimeline">Add Timeline</button>
-                    </div>
-                    <div class="form-group">
-                        <button type="submit">Create Profile</button>
-                    </div>
-                </form>
-            `
-        });
-
-        new Vue({
-            el: '#app'
-        });
-    </script>
 </body>
 </html>
