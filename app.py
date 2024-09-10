@@ -95,6 +95,10 @@ class SettingsForm(FlaskForm):
 def home():
     return render_template('index.html')
 
+@app.route('/home')
+def home():
+    return render_template('index.html')
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegistrationForm()
