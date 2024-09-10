@@ -292,11 +292,6 @@ def generate_qr(data, filename):
     
     return file_path
 
-@app.route('/logout')
-def logout():
-    logout_user()
-    return redirect(url_for('home'))
-
 # Run the app
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
