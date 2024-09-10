@@ -7,25 +7,34 @@
 {% block content %}
 <div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md">
     <h2 class="text-2xl font-bold mb-6">Your Profiles</h2>
-    <ul>
-        {% for profile in profiles %}
-            <li class="mb-4">
-                <div class="flex justify-between items-center">
-                    <div>
-                        <h3 class="text-xl font-bold">{{ profile.name }}</h3>
-                        <p class="text-gray-700"><strong>Created At:</strong> {{ profile.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+    <div class="mb-4">
+        <a href="{{ url_for('create_profile') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+            Create Profile
+        </a>
+    </div>
+    {% if profiles %}
+        <ul>
+            {% for profile in profiles %}
+                <li class="mb-4">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h3 class="text-xl font-bold">{{ profile.name }}</h3>
+                            <p class="text-gray-700"><strong>Created At:</strong> {{ profile.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+                        </div>
+                        <div>
+                            <a href="{{ url_for('view_profile', profile_id=profile.id) }}" class="text-blue-500 hover:text-blue-700">View</a>
+                            <a href="{{ url_for('update_profile', profile_id=profile.id) }}" class="text-blue-500 hover:text-blue-700 ml-4">Edit</a>
+                            <form method="POST" action="{{ url_for('delete_profile', profile_id=profile.id) }}" class="inline">
+                                {{ form.hidden_tag() }}
+                                <button type="submit" class="text-red-500 hover:text-red-700 ml-4">Delete</button>
+                            </form>
+                        </div>
                     </div>
-                    <div>
-                        <a href="{{ url_for('view_profile', profile_id=profile.id) }}" class="text-blue-500 hover:text-blue-700">View</a>
-                        <a href="{{ url_for('update_profile', profile_id=profile.id) }}" class="text-blue-500 hover:text-blue-700 ml-4">Edit</a>
-                        <form method="POST" action="{{ url_for('delete_profile', profile_id=profile.id) }}" class="inline">
-                            {{ form.hidden_tag() }}
-                            <button type="submit" class="text-red-500 hover:text-red-700 ml-4">Delete</button>
-                        </form>
-                    </div>
-                </div>
-            </li>
-        {% endfor %}
-    </ul>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="text-gray-700">No profiles found.</p>
+    {% endif %}
 </div>
 {% endblock %}
