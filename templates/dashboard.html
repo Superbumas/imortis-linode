@@ -3,18 +3,18 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-<div class="md:container md:mx-auto">
+<div class="container mx-auto p-5 w-full">
     <h2 class="text-2xl font-bold mb-4">Dashboard</h2>
     <a href="{{ url_for('create_profile') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-block mb-4">Create New Profile</a>
     <div class="overflow-x-auto bg-white p-4 rounded-lg shadow-md w-full">
         <table class="min-w-full w-full bg-white mt-4">
             <thead>
                 <tr>
-                    <th class="py-2 px-4 border-b">Name</th>
-                    <th class="py-2 px-4 border-b">Bio</th>
-                    <th class="py-2 px-4 border-b">Date of Birth</th>
-                    <th class="py-2 px-4 border-b">Date of Death</th>
-                    <th class="py-2 px-4 border-b">Actions</th>
+                    <th class="py-2 px-4 border-b text-left">Name</th>
+                    <th class="py-2 px-4 border-b text-left">Bio</th>
+                    <th class="py-2 px-4 border-b text-left">Date of Birth</th>
+                    <th class="py-2 px-4 border-b text-left">Date of Death</th>
+                    <th class="py-2 px-4 border-b text-left" style="width: 150px;">Actions</th>
                 </tr>
             </thead>
             <tbody>
