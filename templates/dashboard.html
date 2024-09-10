@@ -19,7 +19,7 @@
         <tbody>
             {% for profile in profiles %}
             <tr>
-                <td class="py-2 px-4 border-b"><a href="{{ url_for('profile', profile_name=profile.name) }}" class="text-blue-500 hover:underline">{{ profile.name }}</a></td>
+                <td class="py-2 px-4 border-b"><a href="{{ url_for('view_profile', profile_name=profile.name) }}" class="text-blue-500 hover:underline">{{ profile.name }}</a></td>
                 <td class="py-2 px-4 border-b">{{ profile.bio }}</td>
                 <td class="py-2 px-4 border-b">{{ profile.date_of_birth }}</td>
                 <td class="py-2 px-4 border-b">{{ profile.date_of_death }}</td>
