@@ -99,6 +99,12 @@ def home():
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
+        # Check if the email already exists
+        existing_user = User.query.filter_by(email=form.email.data).first()
+        if existing_user:
+            flash('Email address already exists. Please use a different email.', 'danger')
+            return redirect(url_for('register'))
+        
         hashed_password = generate_password_hash(form.password.data, method='pbkdf2:sha256')
         new_user = User(username=form.username.data, email=form.email.data, password=hashed_password)
         db.session.add(new_user)
