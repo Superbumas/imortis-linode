@@ -118,7 +118,8 @@ def logout():
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    return render_template('dashboard.html')
+    profiles = Profile.query.filter_by(user_id=current_user.id).all()
+    return render_template('dashboard.html', profiles=profiles)
 
 @app.route('/create_profile', methods=['GET', 'POST'])
 @login_required
