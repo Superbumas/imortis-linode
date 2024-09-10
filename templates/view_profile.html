@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}{{ profile.name }}'s Profile{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>{{ profile.name }}</h1>
+    
+    {% if profile.profile_picture %}
+        <img src="{{ url_for('static', filename='uploads/' + profile.profile_picture) }}" alt="{{ profile.name }}'s picture" class="profile-picture">
+    {% else %}
+        <p>No profile picture available</p>
+    {% endif %}
+    
+    <p><strong>Bio:</strong> {{ profile.bio }}</p>
+    <p><strong>Date of Birth:</strong> {{ profile.date_of_birth.strftime('%Y-%m-%d') }}</p>
+    <p><strong>Date of Death:</strong> {{ profile.date_of_death.strftime('%Y-%m-%d') }}</p>
+    
+    <h2>Timeline</h2>
+    <ul>
+    {% for timeline in profile.timelines %}
+        <li>{{ timeline.date.strftime('%Y-%m-%d') }}: {{ timeline.event }}</li>
+    {% endfor %}
+    </ul>
+    
+    <a href="{{ url_for('dashboard') }}" class="btn btn-primary">Back to Dashboard</a>
+</div>
+{% endblock %}

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <header>
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo">
+    </header>
+    <nav>
+        <a href="{{ url_for('register') }}">Register</a>
+        <a href="{{ url_for('login') }}">Login</a>
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+    </nav>
+    <div class="container">
+        <h2>Edit Profile</h2>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <form method="POST" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+            {% for field in form if field.name != 'csrf_token' and field.name != 'submit' and field.name != 'timelines' %}
+                <p>
+                    {{ field.label }}<br>
+                    {{ field(class="form-control") }}<br>
+                    {% for error in field.errors %}
+                        <span class="error">{{ error }}</span>
+                    {% endfor %}
+                </p>
+            {% endfor %}
+            <h3>Timeline</h3>
+            {% for timeline_form in form.timelines %}
+                <div class="timeline-entry">
+                    {% for field in timeline_form if field.name != 'csrf_token' %}
+                        <p>
+                            {{ field.label }}<br>
+                            {{ field(class="form-control") }}<br>
+                            {% for error in field.errors %}
+                                <span class="error">{{ error }}</span>
+                            {% endfor %}
+                        </p>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+            <p>{{ form.submit(class="btn btn-primary") }}</p>
+        </form>
+    </div>
+</body>
+</html>

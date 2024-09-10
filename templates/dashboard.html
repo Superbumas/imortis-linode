@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="container" id="app">
+    <h2>Dashboard</h2>
+    <button @click="createProfile" class="btn btn-primary">Create New Profile</button>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Bio</th>
+                <th>Date of Birth</th>
+                <th>Date of Death</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="profile in profiles" :key="profile.id">
+                <td><a :href="'/profile/' + encodeURIComponent(profile.name)">{% raw %}{{ profile.name }}{% endraw %}</a></td>
+                <td>{% raw %}{{ profile.bio }}{% endraw %}</td>
+                <td>{% raw %}{{ profile.date_of_birth }}{% endraw %}</td>
+                <td>{% raw %}{{ profile.date_of_death }}{% endraw %}</td>
+                <td>
+                    <button @click="editProfile(profile.name)" class="btn btn-secondary">Edit</button>
+                    <button @click="deleteProfile(profile.id)" class="btn btn-danger">Delete</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            profiles: []
+        },
+        created() {
+            this.fetchProfiles();
+        },
+        methods: {
+            fetchProfiles() {
+                axios.get('/api/profiles')
+                    .then(response => {
+                        this.profiles = response.data;
+                    })
+                    .catch(error => {
+                        console.error("There was an error fetching the profiles data:", error);
+                    });
+            },
+            createProfile() {
+                window.location.href = "{{ url_for('create_profile') }}";
+            },
+            editProfile(profileName) {
+                window.location.href = "{{ url_for('edit_profile', profile_name='') }}" + profileName;
+            },
+            deleteProfile(profileId) {
+                if (confirm('Are you sure you want to delete this profile?')) {
+                    axios.post(`/delete_profile/${profileId}`)
+                        .then(response => {
+                            this.fetchProfiles();  // Refresh the profile list
+                        })
+                        .catch(error => {
+                            console.error("There was an error deleting the profile:", error);
+                        });
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}
