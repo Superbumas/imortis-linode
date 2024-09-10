@@ -33,6 +33,7 @@ def load_user(user_id):
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), nullable=False, unique=True)
+    email = db.Column(db.String(120), nullable=False, unique=True)  # Add this line
     password = db.Column(db.String(255), nullable=False)
 
 class Profile(db.Model):
