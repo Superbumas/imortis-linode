@@ -3,26 +3,38 @@
 {% block title %}{{ profile.name }}'s Profile{% endblock %}
 
 {% block content %}
-<div class="container">
-    <h1>{{ profile.name }}</h1>
-    
-    {% if profile.profile_picture %}
-        <img src="{{ url_for('static', filename='uploads/' + profile.profile_picture) }}" alt="{{ profile.name }}'s picture" class="profile-picture">
-    {% else %}
-        <p>No profile picture available</p>
-    {% endif %}
-    
-    <p><strong>Bio:</strong> {{ profile.bio }}</p>
-    <p><strong>Date of Birth:</strong> {{ profile.date_of_birth.strftime('%Y-%m-%d') }}</p>
-    <p><strong>Date of Death:</strong> {{ profile.date_of_death.strftime('%Y-%m-%d') }}</p>
-    
-    <h2>Timeline</h2>
-    <ul>
-    {% for timeline in profile.timelines %}
-        <li>{{ timeline.date.strftime('%Y-%m-%d') }}: {{ timeline.event }}</li>
-    {% endfor %}
-    </ul>
-    
-    <a href="{{ url_for('dashboard') }}" class="btn btn-primary">Back to Dashboard</a>
+<div class="container mx-auto p-5 w-full">
+    <div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md">
+        <h1 class="text-3xl font-bold mb-4">{{ profile.name }}</h1>
+        
+        {% if profile.profile_picture %}
+            <img src="{{ url_for('static', filename='uploads/' + profile.profile_picture) }}" alt="{{ profile.name }}'s picture" class="profile-picture mb-4 rounded-lg shadow-md">
+        {% else %}
+            <p class="mb-4">No profile picture available</p>
+        {% endif %}
+        
+        <p class="mb-4"><strong>Bio:</strong> {{ profile.bio }}</p>
+        <p class="mb-4"><strong>Date of Birth:</strong> {{ profile.date_of_birth.strftime('%Y-%m-%d') }}</p>
+        <p class="mb-4"><strong>Date of Death:</strong> {{ profile.date_of_death.strftime('%Y-%m-%d') }}</p>
+        
+        <h2 class="text-2xl font-bold mb-4">Timeline</h2>
+        <ul class="list-disc list-inside mb-4">
+        {% for timeline in profile.timelines %}
+            <li>{{ timeline.date.strftime('%Y-%m-%d') }}: {{ timeline.event }}</li>
+        {% endfor %}
+        </ul>
+        
+        <h2 class="text-2xl font-bold mb-4">Memories & Tributes</h2>
+        <div class="mb-4">
+            {% for memory in profile.memories %}
+                <div class="bg-gray-100 p-4 rounded-lg shadow-md mb-4">
+                    <p class="mb-2"><strong>{{ memory.author }}:</strong></p>
+                    <p>{{ memory.content }}</p>
+                </div>
+            {% endfor %}
+        </div>
+        
+        <a href="{{ url_for('dashboard') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Back to Dashboard</a>
+    </div>
 </div>
 {% endblock %}
