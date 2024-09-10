@@ -12,16 +12,23 @@ import base64
 import logging
 import io
 
+# Flask app configuration
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'ThisIsASecretKey'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 
-
+# Initialize extensions
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 
+# User loader for Flask-Login
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+# Models
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), nullable=False, unique=True)
@@ -44,6 +51,7 @@ class Timeline(db.Model):
     event = db.Column(db.String(255), nullable=False)
     profile_id = db.Column(db.Integer, db.ForeignKey('profile.id'), nullable=False)
 
+# Forms
 class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=2, max=100)])
     password = PasswordField('Password', validators=[DataRequired()])
@@ -73,10 +81,7 @@ class ProfileForm(FlaskForm):
     timelines = FieldList(FormField(TimelineForm), min_entries=1, max_entries=10)
     submit = SubmitField('Create Profile')
 
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
-
+# Routes
 @app.route('/')
 def home():
     return render_template('index.html')
@@ -111,58 +116,10 @@ def logout():
     logout_user()
     return redirect(url_for('home'))
 
-def generate_qr(data, filename):
-    qr = qrcode.QRCode(
-        version=1,
-        error_correction=qrcode.constants.ERROR_CORRECT_L,
-        box_size=10,
-        border=4,
-    )
-    qr.add_data(data)
-    qr.make(fit=True)
-    img = qr.make_image(fill='black', back_color='white')
-    
-    # Ensure the directory exists
-    qr_code_dir = os.path.join(app.config['UPLOAD_FOLDER'], 'qr_codes')
-    os.makedirs(qr_code_dir, exist_ok=True)
-    
-    # Save the image
-    file_path = os.path.join(qr_code_dir, filename)
-    img.save(file_path)
-    
-    return file_path
-
-
-@app.route('/api/profiles')
-@login_required
-def api_profiles():
-    try:
-        profiles = Profile.query.filter_by(user_id=current_user.id).all()
-        profiles_data = [
-            {
-                "id": profile.id,
-                "name": profile.name,
-                "bio": profile.bio,
-                "date_of_birth": profile.date_of_birth.strftime('%Y-%m-%d'),
-                "date_of_death": profile.date_of_death.strftime('%Y-%m-%d'),
-                "timelines": [
-                    {
-                        "date": timeline.date.strftime('%Y-%m-%d'),
-                        "event": timeline.event
-                    } for timeline in profile.timelines
-                ]
-            } for profile in profiles
-        ]
-        return jsonify(profiles_data)
-    except Exception as e:
-        app.logger.error(f"Error fetching profiles: {e}")
-        return jsonify({"error": "Internal Server Error"}), 500
-
 @app.route('/dashboard')
 @login_required
 def dashboard():
     return render_template('dashboard.html')
-
 
 @app.route('/create_profile', methods=['GET', 'POST'])
 @login_required
@@ -170,7 +127,6 @@ def create_profile():
     form = ProfileForm()
     if form.validate_on_submit():
         try:
-
             session.pop('_flashes', None)
 
             profile_picture = None
@@ -218,7 +174,6 @@ def create_profile():
 def view_profile(profile_name):
     profile = Profile.query.filter_by(name=profile_name).first_or_404()
     return render_template('view_profile.html', profile=profile)
-
 
 @app.route('/edit_profile/<profile_name>', methods=['GET', 'POST'])
 @login_required
@@ -295,8 +250,57 @@ def delete_profile(profile_id):
     
     return redirect(url_for('dashboard'))
 
+@app.route('/api/profiles')
+@login_required
+def api_profiles():
+    try:
+        profiles = Profile.query.filter_by(user_id=current_user.id).all()
+        profiles_data = [
+            {
+                "id": profile.id,
+                "name": profile.name,
+                "bio": profile.bio,
+                "date_of_birth": profile.date_of_birth.strftime('%Y-%m-%d'),
+                "date_of_death": profile.date_of_death.strftime('%Y-%m-%d'),
+                "timelines": [
+                    {
+                        "date": timeline.date.strftime('%Y-%m-%d'),
+                        "event": timeline.event
+                    } for timeline in profile.timelines
+                ]
+            } for profile in profiles
+        ]
+        return jsonify(profiles_data)
+    except Exception as e:
+        app.logger.error(f"Error fetching profiles: {e}")
+        return jsonify({"error": "Internal Server Error"}), 500
+
+# Utility functions
+def generate_qr(data, filename):
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=4,
+    )
+    qr.add_data(data)
+    qr.make(fit=True)
+    img = qr.make_image(fill='black', back_color='white')
+    
+    # Ensure the directory exists
+    qr_code_dir = os.path.join(app.config['UPLOAD_FOLDER'], 'qr_codes')
+    os.makedirs(qr_code_dir, exist_ok=True)
+    
+    # Save the image
+    file_path = os.path.join(qr_code_dir, filename)
+    img.save(file_path)
+    
+    return file_path
+
+# Run the app
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
     
+# Create database tables
 with app.app_context():
     db.create_all()
