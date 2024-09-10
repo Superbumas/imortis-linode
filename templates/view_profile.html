@@ -1,40 +1,34 @@
 {% extends "base.html" %}
 
-{% block title %}{{ profile.name }}'s Profile{% endblock %}
+{% block title %}Profile - {{ profile.name }}{% endblock %}
+
+{% block page_title %}Profile{% endblock %}
 
 {% block content %}
-<div class="container mx-auto p-5 w-full">
-    <div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md">
-        <h1 class="text-3xl font-bold mb-4">{{ profile.name }}</h1>
-        
+<div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md">
+    <div class="flex items-center mb-6">
         {% if profile.profile_picture %}
-            <img src="{{ url_for('static', filename='uploads/' + profile.profile_picture) }}" alt="{{ profile.name }}'s picture" class="profile-picture mb-4 rounded-lg shadow-md">
+            <img src="{{ url_for('static', filename='uploads/' ~ profile.profile_picture) }}" alt="{{ profile.name }}" class="w-24 h-24 rounded-full mr-4">
         {% else %}
-            <p class="mb-4">No profile picture available</p>
+            <div class="w-24 h-24 rounded-full bg-gray-200 mr-4"></div>
         {% endif %}
-        
-        <p class="mb-4"><strong>Bio:</strong> {{ profile.bio }}</p>
-        <p class="mb-4"><strong>Date of Birth:</strong> {{ profile.date_of_birth.strftime('%Y-%m-%d') }}</p>
-        <p class="mb-4"><strong>Date of Death:</strong> {{ profile.date_of_death.strftime('%Y-%m-%d') }}</p>
-        
-        <h2 class="text-2xl font-bold mb-4">Timeline</h2>
-        <ul class="list-disc list-inside mb-4">
-        {% for timeline in profile.timelines %}
-            <li>{{ timeline.date.strftime('%Y-%m-%d') }}: {{ timeline.event }}</li>
-        {% endfor %}
-        </ul>
-        
-        <h2 class="text-2xl font-bold mb-4">Memories & Tributes</h2>
-        <div class="mb-4">
-            {% for memory in profile.memories %}
-                <div class="bg-gray-100 p-4 rounded-lg shadow-md mb-4">
-                    <p class="mb-2"><strong>{{ memory.author }}:</strong></p>
-                    <p>{{ memory.content }}</p>
-                </div>
-            {% endfor %}
+        <div>
+            <h2 class="text-3xl font-bold">{{ profile.name }}</h2>
+            <p class="text-gray-600">{{ profile.date_of_birth.strftime('%Y-%m-%d') }} - {{ profile.date_of_death.strftime('%Y-%m-%d') }}</p>
         </div>
-        
-        <a href="{{ url_for('dashboard') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Back to Dashboard</a>
+    </div>
+    <hr class="my-6 border-gray-300">
+    <div class="mb-6">
+        <h3 class="text-xl font-bold mb-2">Biography</h3>
+        <p class="text-gray-700">{{ profile.bio }}</p>
+    </div>
+    <hr class="my-6 border-gray-300">
+    <div class="flex justify-end">
+        <a href="{{ url_for('update_profile', profile_id=profile.id) }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-4">Edit</a>
+        <form method="POST" action="{{ url_for('delete_profile', profile_id=profile.id) }}" class="inline">
+            {{ form.hidden_tag() }}
+            <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Delete</button>
+        </form>
     </div>
 </div>
 {% endblock %}
