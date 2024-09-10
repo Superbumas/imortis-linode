@@ -170,7 +170,7 @@ def view_profile(profile_name):
     profile = Profile.query.filter_by(name=profile_name).first_or_404()
     return render_template('view_profile.html', profile=profile)
 
-@app.route('/update_profile/<int:profile_id>', methods=['POST'])
+@app.route('/update_profile/<int:profile_id>', methods=['GET', 'POST'])
 @login_required
 def update_profile(profile_id):
     profile = Profile.query.get_or_404(profile_id)
@@ -191,6 +191,11 @@ def update_profile(profile_id):
         db.session.commit()
         flash('Your profile has been updated!', 'success')
         return redirect(url_for('dashboard'))
+    elif request.method == 'GET':
+        form.name.data = profile.name
+        form.bio.data = profile.bio
+        form.date_of_birth.data = profile.date_of_birth
+        form.date_of_death.data = profile.date_of_death
     return render_template('edit_profile.html', form=form, profile=profile)
 
 @app.route('/delete_profile/<int:profile_id>', methods=['POST'])
