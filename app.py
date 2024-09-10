@@ -145,22 +145,14 @@ def create_profile():
                 user_id=current_user.id
             )
             db.session.add(new_profile)
-            db.session.flush()  # This assigns an ID to new_profile
-
-            for timeline_form in form.timelines:
-                new_timeline = Timeline(
-                    date=timeline_form.date.data,
-                    event=timeline_form.event.data,
-                    profile_id=new_profile.id
-                )
-                db.session.add(new_timeline)
-            
             db.session.commit()
             flash('Profile created successfully!', 'success')
             return redirect(url_for('dashboard'))
         except Exception as e:
             db.session.rollback()
             flash(f'An error occurred: {str(e)}', 'danger')
+    else:
+        print("Form validation failed")
     
     # If form validation fails, this will show errors
     for field, errors in form.errors.items():
