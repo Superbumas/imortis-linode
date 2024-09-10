@@ -100,9 +100,15 @@ def register():
     form = RegistrationForm()
     if form.validate_on_submit():
         # Check if the email already exists
-        existing_user = User.query.filter_by(email=form.email.data).first()
-        if existing_user:
+        existing_user_email = User.query.filter_by(email=form.email.data).first()
+        if existing_user_email:
             flash('Email address already exists. Please use a different email.', 'danger')
+            return redirect(url_for('register'))
+        
+        # Check if the username already exists
+        existing_user_username = User.query.filter_by(username=form.username.data).first()
+        if existing_user_username:
+            flash('Username already exists. Please choose a different username.', 'danger')
             return redirect(url_for('register'))
         
         hashed_password = generate_password_hash(form.password.data, method='pbkdf2:sha256')
