@@ -197,9 +197,10 @@ def create_profile():
     
     return render_template('create_profile.html', form=form)
 
-@app.route('/profile/<string:profile_name>')
-def view_profile(profile_name):
-    profile = Profile.query.filter_by(name=profile_name).first_or_404()
+@app.route('/profile/<int:profile_id>')
+@login_required
+def view_profile(profile_id):
+    profile = Profile.query.get_or_404(profile_id)
     return render_template('view_profile.html', profile=profile)
 
 @app.route('/update_profile/<int:profile_id>', methods=['GET', 'POST'])
