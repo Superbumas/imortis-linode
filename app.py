@@ -206,7 +206,8 @@ def create_profile():
 @login_required
 def view_profile(profile_id):
     profile = Profile.query.get_or_404(profile_id)
-    return render_template('view_profile.html', profile=profile)
+    delete_form = DeleteProfileForm()
+    return render_template('view_profile.html', profile=profile, form=delete_form)
 
 @app.route('/update_profile/<int:profile_id>', methods=['GET', 'POST'])
 @login_required
