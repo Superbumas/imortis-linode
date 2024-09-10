@@ -361,7 +361,7 @@ def imortis():
 
 
 
-app = Flask(__name__, static_folder='static')
+
 
 # Run the app
 if __name__ == '__main__':
