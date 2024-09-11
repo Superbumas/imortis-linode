@@ -94,8 +94,13 @@
         <div class="mb-4">
             <input id="share-url" type="text" class="w-full p-2 border border-gray-300 rounded" value="{{ request.url }}" readonly>
         </div>
-        <div class="flex justify-end space-x-4">
-            <button id="copy-url" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Copy URL</button>
+        <div class="flex justify-between space-x-4">
+            <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.url }}" target="_blank" class="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Facebook</a>
+            <a href="https://twitter.com/intent/tweet?url={{ request.url }}&text=Check out this profile on our site." target="_blank" class="bg-blue-400 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Twitter</a>
+            <a href="mailto:?subject=Check out this profile&body={{ request.url }}" class="bg-red-600 hover:bg-red-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Email</a>
+            <button id="copy-url" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Copy URL</button>
+        </div>
+        <div class="flex justify-end mt-4">
             <button id="close-share-dialog" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Close</button>
         </div>
     </div>
