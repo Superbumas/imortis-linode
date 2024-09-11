@@ -151,9 +151,14 @@ def logout():
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    profiles = Profile.query.filter_by(user_id=current_user.id).all()
-    delete_form = DeleteProfileForm()
-    return render_template('dashboard.html', profiles=profiles, form=delete_form)
+    try:
+        profiles = Profile.query.filter_by(user_id=current_user.id).all()
+        delete_form = DeleteProfileForm()
+        return render_template('dashboard.html', profiles=profiles, delete_form=delete_form)
+    except Exception as e:
+        flash(f'An error occurred: {str(e)}', 'danger')
+        return redirect(url_for('index'))
+
 
 @app.route('/create_profile', methods=['GET', 'POST'])
 @login_required
