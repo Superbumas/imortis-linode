@@ -213,47 +213,41 @@ def view_profile(profile_id):
 @login_required
 def update_profile(profile_id):
     profile = Profile.query.get_or_404(profile_id)
-    if profile.user_id != current_user.id:
-        abort(403)
-    form = ProfileForm()
+    form = ProfileForm(obj=profile)
+    
     if form.validate_on_submit():
-        profile.name = form.name.data
-        profile.bio = form.bio.data
-        profile.date_of_birth = form.date_of_birth.data
-        profile.date_of_death = form.date_of_death.data
-        if form.profile_picture.data:
-            filename = secure_filename(form.profile_picture.data.filename)
-            upload_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            os.makedirs(os.path.dirname(upload_path), exist_ok=True)
-            form.profile_picture.data.save(upload_path)
-            profile.profile_picture = filename
-        db.session.commit()
-        flash('Your profile has been updated!', 'success')
-        return redirect(url_for('dashboard'))
-    elif request.method == 'GET':
-        form.name.data = profile.name
-        form.bio.data = profile.bio
-        form.date_of_birth.data = profile.date_of_birth
-        form.date_of_death.data = profile.date_of_death
-    return render_template('edit_profile.html', form=form, profile=profile)
+        try:
+            profile.first_name = form.first_name.data
+            profile.last_name = form.last_name.data
+            profile.bio = form.bio.data
 
-@app.route('/delete_profile/<int:profile_id>', methods=['POST'])
-@login_required
-def delete_profile(profile_id):
-    profile = Profile.query.get_or_404(profile_id)
-    if profile.user_id != current_user.id:
-        flash('You do not have permission to delete this profile.', 'danger')
-        return redirect(url_for('dashboard'))
+            if form.profile_picture.data:
+                filename = secure_filename(form.profile_picture.data.filename)
+                upload_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                os.makedirs(os.path.dirname(upload_path), exist_ok=True)
+                form.profile_picture.data.save(upload_path)
+                profile.profile_picture = filename
+
+            if form.cover_photo.data:
+                filename = secure_filename(form.cover_photo.data.filename)
+                upload_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                os.makedirs(os.path.dirname(upload_path), exist_ok=True)
+                form.cover_photo.data.save(upload_path)
+                profile.cover_photo = filename
+
+            profile.date_of_birth = form.date_of_birth.data
+            profile.date_of_death = form.date_of_death.data
+            profile.country = form.country.data
+            profile.city = form.city.data
+
+            db.session.commit()
+            flash('Profile updated successfully!', 'success')
+            return redirect(url_for('view_profile', profile_id=profile.id))
+        except Exception as e:
+            db.session.rollback()
+            flash(f'An error occurred: {str(e)}', 'danger')
     
-    try:
-        db.session.delete(profile)
-        db.session.commit()
-        flash('Profile deleted successfully!', 'success')
-    except Exception as e:
-        db.session.rollback()
-        flash(f'An error occurred while deleting the profile: {str(e)}', 'danger')
-    
-    return redirect(url_for('dashboard'))
+    return render_template('edit_profile.html', form=form, profile=profile)
 
 
 @app.route('/api/profiles')
