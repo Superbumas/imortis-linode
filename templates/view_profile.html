@@ -25,7 +25,7 @@
         <h1 class="text-3xl font-bold">{{ profile.first_name }} {{ profile.last_name }}</h1>
         <p class="text-gray-600">{{ profile.date_of_birth.strftime('%b %d, %Y') }} - {{ profile.date_of_death.strftime('%b %d, %Y') if profile.date_of_death else 'Present' }}</p>
         <div class="mt-4 flex justify-center space-x-4">
-            <button id="share-button" class="bg-white border border-yellow-500 text-yellow-500 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Share</button>
+            <a href="{{ url_for('edit_profile', profile_id=profile.id) }}" class="bg-blue-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Edit Profile</a>
         </div>
     </div>
     <div class="mt-8">
@@ -81,25 +81,6 @@
     </div>
 </div>
 
-<!-- Share Dialog HTML -->
-<div id="share-dialog" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75 hidden">
-    <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
-        <h2 class="text-xl font-bold mb-4">Share this profile</h2>
-        <div class="mb-4">
-            <input id="share-url" type="text" class="w-full p-2 border border-gray-300 rounded" value="{{ request.url }}" readonly>
-        </div>
-        <div class="flex justify-between space-x-4">
-            <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.url }}" target="_blank" class="text-blue-600 hover:text-blue-800 text-3xl"><i class="fab fa-facebook"></i></a>
-            <a href="https://twitter.com/intent/tweet?url={{ request.url }}&text=Check out this profile on our site." target="_blank" class="text-blue-400 hover:text-blue-600 text-3xl"><i class="fab fa-twitter"></i></a>
-            <a href="mailto:?subject=Check out this profile&body={{ request.url }}" class="text-red-600 hover:text-red-800 text-3xl"><i class="fas fa-envelope"></i></a>
-            <button id="copy-url" class="text-gray-500 hover:text-gray-700 text-3xl"><i class="fas fa-link"></i></button>
-        </div>
-        <div class="flex justify-end mt-4">
-            <button id="close-share-dialog" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Close</button>
-        </div>
-    </div>
-</div>
-
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const tabLinks = document.querySelectorAll('.tab-link');
@@ -107,11 +88,6 @@
         const lightbox = document.getElementById('lightbox');
         const lightboxImg = document.getElementById('lightbox-img');
         const lightboxClose = document.getElementById('lightbox-close');
-        const shareButton = document.getElementById('share-button');
-        const shareDialog = document.getElementById('share-dialog');
-        const closeShareDialog = document.getElementById('close-share-dialog');
-        const copyUrlButton = document.getElementById('copy-url');
-        const shareUrlInput = document.getElementById('share-url');
 
         tabLinks.forEach(link => {
             link.addEventListener('click', function(event) {
@@ -140,32 +116,6 @@
 
         // Show the first tab by default
         tabLinks[0].click();
-
-        // Share button functionality
-        shareButton.addEventListener('click', function() {
-            if (navigator.share) {
-                navigator.share({
-                    title: 'Profile of {{ profile.first_name }} {{ profile.last_name }}',
-                    text: 'Check out this profile on our site.',
-                    url: window.location.href
-                }).then(() => {
-                    console.log('Thanks for sharing!');
-                }).catch(console.error);
-            } else {
-                // Fallback for browsers that do not support the Web Share API
-                shareDialog.classList.remove('hidden');
-            }
-        });
-
-        closeShareDialog.addEventListener('click', function() {
-            shareDialog.classList.add('hidden');
-        });
-
-        copyUrlButton.addEventListener('click', function() {
-            shareUrlInput.select();
-            document.execCommand('copy');
-            alert('URL copied to clipboard. You can now share it manually.');
-        });
     });
 </script>
 {% endblock %}
