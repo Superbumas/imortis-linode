@@ -8,13 +8,13 @@
 <div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md">
     <div class="text-center mb-6">
         {% if profile.cover_photo %}
-            <img src="{{ url_for('static', filename='uploads/' ~ profile.cover_photo) }}" alt="Cover Photo" class="w-full h-64 object-cover rounded-t-lg">
+            <img src="{{ url_for('static', filename='uploads/' ~ profile.cover_photo) }}" alt="Cover Photo" class="w-full h-64 object-cover rounded-t-lg lightbox-trigger">
         {% else %}
             <div class="w-full h-64 bg-gray-200 rounded-t-lg"></div>
         {% endif %}
         <div class="relative -mt-16">
             {% if profile.profile_picture %}
-                <img src="{{ url_for('static', filename='uploads/' ~ profile.profile_picture) }}" alt="{{ profile.first_name }} {{ profile.last_name }}" class="w-32 h-32 rounded-full mx-auto border-4 border-white">
+                <img src="{{ url_for('static', filename='uploads/' ~ profile.profile_picture) }}" alt="{{ profile.first_name }} {{ profile.last_name }}" class="w-32 h-32 rounded-full mx-auto border-4 border-white lightbox-trigger">
             {% else %}
                 <div class="w-32 h-32 rounded-full bg-gray-200 mx-auto border-4 border-white"></div>
             {% endif %}
@@ -53,12 +53,12 @@
                 <h3 class="text-xl font-bold mb-2">Media</h3>
                 <div class="grid grid-cols-2 gap-4">
                     {% if profile.profile_picture %}
-                        <img src="{{ url_for('static', filename='uploads/' ~ profile.profile_picture) }}" alt="Profile Picture" class="w-full h-48 object-cover rounded-lg">
+                        <img src="{{ url_for('static', filename='uploads/' ~ profile.profile_picture) }}" alt="Profile Picture" class="w-full h-48 object-cover rounded-lg lightbox-trigger">
                     {% else %}
                         <div class="w-full h-48 bg-gray-200 rounded-lg"></div>
                     {% endif %}
                     {% if profile.cover_photo %}
-                        <img src="{{ url_for('static', filename='uploads/' ~ profile.cover_photo) }}" alt="Cover Photo" class="w-full h-48 object-cover rounded-lg">
+                        <img src="{{ url_for('static', filename='uploads/' ~ profile.cover_photo) }}" alt="Cover Photo" class="w-full h-48 object-cover rounded-lg lightbox-trigger">
                     {% else %}
                         <div class="w-full h-48 bg-gray-200 rounded-lg"></div>
                     {% endif %}
@@ -79,11 +79,35 @@
         </form>
     </div>
 </div>
+{% endblock %}
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const tabLinks = document.querySelectorAll('.tab-link');
         const tabContents = document.querySelectorAll('.tab-content');
+        const lightbox = document.createElement('div');
+        lightbox.classList.add('lightbox');
+        document.body.appendChild(lightbox);
+
+        const lightboxContent = document.createElement('div');
+        lightboxContent.classList.add('lightbox-content');
+        lightbox.appendChild(lightboxContent);
+
+        const lightboxClose = document.createElement('span');
+        lightboxClose.classList.add('lightbox-close');
+        lightboxClose.innerHTML = '&times;';
+        lightbox.appendChild(lightboxClose);
+
+        lightboxClose.addEventListener('click', function() {
+            lightbox.style.display = 'none';
+        });
+
+        document.querySelectorAll('.lightbox-trigger').forEach(image => {
+            image.addEventListener('click', function() {
+                lightboxContent.innerHTML = `<img src="${this.src}" alt="${this.alt}">`;
+                lightbox.style.display = 'block';
+            });
+        });
 
         tabLinks.forEach(link => {
             link.addEventListener('click', function(event) {
@@ -102,4 +126,47 @@
         tabLinks[0].click();
     });
 </script>
-{% endblock %}
+
+<style>
+    .lightbox {
+        display: none;
+        position: fixed;
+        z-index: 9999;
+        padding-top: 60px;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.9);
+    }
+
+    .lightbox-content {
+        margin: auto;
+        display: block;
+        width: 80%;
+        max-width: 700px;
+    }
+
+    .lightbox-content img {
+        width: 100%;
+        height: auto;
+    }
+
+    .lightbox-close {
+        position: absolute;
+        top: 15px;
+        right: 35px;
+        color: #fff;
+        font-size: 40px;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+
+    .lightbox-close:hover,
+    .lightbox-close:focus {
+        color: #bbb;
+        text-decoration: none;
+        cursor: pointer;
+    }
+</style>
