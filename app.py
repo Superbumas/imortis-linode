@@ -66,7 +66,8 @@ class TimelineEvent(db.Model):
     event_text = db.Column(db.String(500), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
-    profile = db.relationship('Profile', back_populates='timeline_events')
+    # Remove the back_populates to avoid conflict
+    # profile = db.relationship('Profile', back_populates='timeline_events')
 
 # Forms
 class RegistrationForm(FlaskForm):
