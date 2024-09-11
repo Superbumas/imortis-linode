@@ -221,6 +221,8 @@ def update_profile(profile_id):
             profile.first_name = form.first_name.data
             profile.last_name = form.last_name.data
             profile.bio = form.bio.data
+            profile.timelinedate = form.timelinedate.data  # Add this line
+            profile.timelinetext = form.timelinetext.data
 
             if form.profile_picture.data:
                 filename = secure_filename(form.profile_picture.data.filename)

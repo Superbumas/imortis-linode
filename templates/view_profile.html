@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Profile - {{ profile.name }}{% endblock %}
+{% block title %}Profile - {{ profile.first_name }} {{ profile.last_name }}{% endblock %}
 
 {% block page_title %}Profile{% endblock %}
 
@@ -14,7 +14,7 @@
         {% endif %}
         <div class="relative -mt-16">
             {% if profile.profile_picture %}
-                <img src="{{ url_for('static', filename='uploads/' ~ profile.profile_picture) }}" alt="{{ profile.name }}" class="w-32 h-32 rounded-full mx-auto border-4 border-white">
+                <img src="{{ url_for('static', filename='uploads/' ~ profile.profile_picture) }}" alt="{{ profile.first_name }} {{ profile.last_name }}" class="w-32 h-32 rounded-full mx-auto border-4 border-white">
             {% else %}
                 <div class="w-32 h-32 rounded-full bg-gray-200 mx-auto border-4 border-white"></div>
             {% endif %}
@@ -31,16 +31,33 @@
     </div>
     <div class="mt-8">
         <div class="flex justify-center space-x-8 border-b border-gray-300 pb-2">
-            <a href="#" class="text-gray-600 hover:text-gray-900">Timeline</a>
-            <a href="#" class="text-gray-600 hover:text-gray-900">Bio</a>
-            <a href="#" class="text-yellow-500 border-b-2 border-yellow-500">Media</a>
-            <a href="#" class="text-gray-600 hover:text-gray-900">Tributes</a>
+            <a href="#timeline" class="text-gray-600 hover:text-gray-900">Timeline</a>
+            <a href="#bio" class="text-gray-600 hover:text-gray-900">Bio</a>
+            <a href="#media" class="text-yellow-500 border-b-2 border-yellow-500">Media</a>
+            <a href="#tributes" class="text-gray-600 hover:text-gray-900">Tributes</a>
         </div>
-        <div class="mt-6 grid grid-cols-2 gap-4">
-            <!-- Example media items -->
-            <img src="https://via.placeholder.com/150" alt="Media 1" class="w-full h-48 object-cover rounded-lg">
-            <img src="https://via.placeholder.com/150" alt="Media 2" class="w-full h-48 object-cover rounded-lg">
-            <!-- Add more media items as needed -->
+        <div class="mt-6">
+            <div id="timeline">
+                <h3 class="text-xl font-bold mb-2">Timeline</h3>
+                <p class="text-gray-700">{{ profile.timelinedate.strftime('%b %d, %Y') }} - {{ profile.timelinetext }}</p>
+            </div>
+            <div id="bio" class="hidden">
+                <h3 class="text-xl font-bold mb-2">Bio</h3>
+                <p class="text-gray-700">{{ profile.bio }}</p>
+            </div>
+            <div id="media" class="hidden">
+                <h3 class="text-xl font-bold mb-2">Media</h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <!-- Example media items -->
+                    <img src="https://via.placeholder.com/150" alt="Media 1" class="w-full h-48 object-cover rounded-lg">
+                    <img src="https://via.placeholder.com/150" alt="Media 2" class="w-full h-48 object-cover rounded-lg">
+                    <!-- Add more media items as needed -->
+                </div>
+            </div>
+            <div id="tributes" class="hidden">
+                <h3 class="text-xl font-bold mb-2">Tributes</h3>
+                <!-- Add tributes content here -->
+            </div>
         </div>
     </div>
     <hr class="my-6 border-gray-300">
@@ -48,8 +65,4 @@
         <a href="{{ url_for('update_profile', profile_id=profile.id) }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-4">Edit</a>
         <form method="POST" action="{{ url_for('delete_profile', profile_id=profile.id) }}" class="inline">
             {{ form.hidden_tag() }}
-            <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Delete</button>
-        </form>
-    </div>
-</div>
-{% endblock %}
+            <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none

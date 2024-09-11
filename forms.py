@@ -22,6 +22,8 @@ class ProfileForm(FlaskForm):
     date_of_death = DateField('Date of Death', format='%Y-%m-%d', validators=[DataRequired()])
     country = SelectField('Country', choices=COUNTRIES, validators=[DataRequired()])
     city = StringField('City', validators=[DataRequired()])
+    timelinedate = DateField('Timeline Date', format='%Y-%m-%d')
+    timelinetext = TextAreaField('Timeline Text')  
     submit = SubmitField('Create Profile')
 
 class DeleteProfileForm(FlaskForm):
