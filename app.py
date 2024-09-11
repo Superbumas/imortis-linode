@@ -227,7 +227,7 @@ def edit_profile(profile_id):
         flash('Profile not found.', 'danger')
         return redirect(url_for('dashboard'))
     
-    form = EditProfileForm(obj=profile)
+    form = ProfileForm(obj=profile)
     if form.validate_on_submit():
         try:
             profile.first_name = form.first_name.data
