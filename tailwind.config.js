@@ -1,7 +1,7 @@
 module.exports = {
     content: [
-      './templates/**/*.html',
-      './static/**/*.js',
+      './templates/*.html',
+      './static/js/*.js',
       // Add other paths to your template files here
     ],
     theme: {
