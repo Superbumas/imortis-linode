@@ -190,7 +190,6 @@ def create_profile():
                 bio=form.bio.data,
                 profile_picture=profile_picture,
                 cover_photo=cover_photo,
-                email=form.email.data,
                 country=form.country.data,
                 city=form.city.data,
                 user_id=current_user.id
