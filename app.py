@@ -8,7 +8,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 import qrcode
 from datetime import datetime
-from forms import DeleteProfileForm, ProfileForm
+from forms import DeleteProfileForm, ProfileForm, EditProfileForm, EditTimelineForm
 import os
 import base64
 import logging

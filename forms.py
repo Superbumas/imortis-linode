@@ -13,20 +13,24 @@ COUNTRIES = [
 ]
 
 class TimelineEventForm(FlaskForm):
-    event_date = DateField('Event Date', validators=[DataRequired()])
-    event_text = TextAreaField('Event Text', validators=[DataRequired()])
+    event_date = DateField('Event Date', format='%Y-%m-%d', validators=[DataRequired()])
+    event_text = TextAreaField('Event Text', validators=[DataRequired(), Length(max=255)])
 
 class ProfileForm(FlaskForm):
-    first_name = StringField('First Name', validators=[DataRequired()])
-    last_name = StringField('Last Name', validators=[DataRequired()])
-    bio = TextAreaField('Bio', validators=[Optional()])
-    profile_picture = FileField('Profile Picture', validators=[Optional()])
-    cover_photo = FileField('Cover Photo', validators=[Optional()])
+    first_name = StringField('First Name', validators=[DataRequired(), Length(max=50)])
+    last_name = StringField('Last Name', validators=[DataRequired(), Length(max=50)])
+    bio = TextAreaField('Bio', validators=[Length(max=500)])
+    profile_picture = FileField('Profile Picture', validators=[FileAllowed(['jpg', 'png', 'jpeg'])])
+    cover_photo = FileField('Cover Photo', validators=[FileAllowed(['jpg', 'png', 'jpeg'])])
     date_of_birth = DateField('Date of Birth', format='%Y-%m-%d', validators=[DataRequired()])
     date_of_death = DateField('Date of Death', format='%Y-%m-%d', validators=[DataRequired()])
-    country = SelectField('Country', choices=COUNTRIES, validators=[DataRequired()])
-    city = StringField('City', validators=[DataRequired()])
-    submit = SubmitField('Create Profile')
+    country = StringField('Country', validators=[DataRequired(), Length(max=50)])
+    city = StringField('City', validators=[DataRequired(), Length(max=50)])
+    timeline_events = FieldList(FormField(TimelineEventForm), min_entries=1)
+    submit = SubmitField('Save')
+
+class EditProfileForm(ProfileForm):
+    submit = SubmitField('Update')
 
 class DeleteProfileForm(FlaskForm):
     submit = SubmitField('Delete')
