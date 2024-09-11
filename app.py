@@ -157,8 +157,7 @@ def dashboard():
         return render_template('dashboard.html', profiles=profiles, delete_form=delete_form)
     except Exception as e:
         flash(f'An error occurred: {str(e)}', 'danger')
-        return redirect(url_for('index'))
-
+        return redirect(url_for('login'))  # Redirect to login if an error occurs
 
 @app.route('/create_profile', methods=['GET', 'POST'])
 @login_required
