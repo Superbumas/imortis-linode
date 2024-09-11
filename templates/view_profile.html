@@ -21,7 +21,7 @@
         </div>
     </div>
     <div class="text-center">
-        <h2 class="text-sm text-gray-500">In Loving Memory of</h2>
+        <h2 class="text-s text-gray-500">In Loving Memory of</h2>
         <h1 class="text-3xl font-bold">{{ profile.first_name }} {{ profile.last_name }}</h1>
         <p class="text-gray-600">{{ profile.date_of_birth.strftime('%b %d, %Y') }} - {{ profile.date_of_death.strftime('%b %d, %Y') if profile.date_of_death else 'Present' }}</p>
         <div class="mt-4 flex justify-center space-x-4">
