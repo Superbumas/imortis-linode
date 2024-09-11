@@ -21,7 +21,7 @@
         </div>
     </div>
     <div class="text-center">
-        <h2 class="text-sm text-gray-500">In Loving Memory of</h2>
+        <h2 class="text-xl text-gray-500">In Loving Memory of</h2>
         <h1 class="text-3xl font-bold">{{ profile.first_name }} {{ profile.last_name }}</h1>
         <p class="text-gray-600">{{ profile.date_of_birth.strftime('%b %d, %Y') }} - {{ profile.date_of_death.strftime('%b %d, %Y') if profile.date_of_death else 'Present' }}</p>
         <div class="mt-4 flex justify-center space-x-4">
@@ -87,6 +87,20 @@
     </div>
 </div>
 
+<!-- Share Dialog HTML -->
+<div id="share-dialog" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75 hidden">
+    <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+        <h2 class="text-xl font-bold mb-4">Share this profile</h2>
+        <div class="mb-4">
+            <input id="share-url" type="text" class="w-full p-2 border border-gray-300 rounded" value="{{ request.url }}" readonly>
+        </div>
+        <div class="flex justify-end space-x-4">
+            <button id="copy-url" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Copy URL</button>
+            <button id="close-share-dialog" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Close</button>
+        </div>
+    </div>
+</div>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const tabLinks = document.querySelectorAll('.tab-link');
@@ -95,6 +109,10 @@
         const lightboxImg = document.getElementById('lightbox-img');
         const lightboxClose = document.getElementById('lightbox-close');
         const shareButton = document.getElementById('share-button');
+        const shareDialog = document.getElementById('share-dialog');
+        const closeShareDialog = document.getElementById('close-share-dialog');
+        const copyUrlButton = document.getElementById('copy-url');
+        const shareUrlInput = document.getElementById('share-url');
 
         tabLinks.forEach(link => {
             link.addEventListener('click', function(event) {
@@ -136,16 +154,18 @@
                 }).catch(console.error);
             } else {
                 // Fallback for browsers that do not support the Web Share API
-                const shareUrl = window.location.href;
-                const shareText = `Check out this profile on our site: ${shareUrl}`;
-                const tempInput = document.createElement('input');
-                document.body.appendChild(tempInput);
-                tempInput.value = shareUrl;
-                tempInput.select();
-                document.execCommand('copy');
-                document.body.removeChild(tempInput);
-                alert('URL copied to clipboard. You can now share it manually.');
+                shareDialog.classList.remove('hidden');
             }
+        });
+
+        closeShareDialog.addEventListener('click', function() {
+            shareDialog.classList.add('hidden');
+        });
+
+        copyUrlButton.addEventListener('click', function() {
+            shareUrlInput.select();
+            document.execCommand('copy');
+            alert('URL copied to clipboard. You can now share it manually.');
         });
     });
 </script>
