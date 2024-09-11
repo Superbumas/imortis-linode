@@ -16,7 +16,7 @@ class TimelineEventForm(FlaskForm):
     event_date = DateField('Event Date', format='%Y-%m-%d', validators=[DataRequired()])
     event_text = StringField('Event Text', validators=[DataRequired(), Length(max=500)])
 
-class ProfileForm(FlaskForm):
+class EditProfileForm(FlaskForm):
     first_name = StringField('First Name', validators=[DataRequired(), Length(max=50)])
     last_name = StringField('Last Name', validators=[DataRequired(), Length(max=50)])
     bio = TextAreaField('Bio', validators=[Length(max=500)])
@@ -26,7 +26,8 @@ class ProfileForm(FlaskForm):
     date_of_death = DateField('Date of Death', format='%Y-%m-%d', validators=[DataRequired()])
     country = StringField('Country', validators=[DataRequired(), Length(max=50)])
     city = StringField('City', validators=[DataRequired(), Length(max=50)])
-    submit = SubmitField('Save')
+    timeline_events = FieldList(FormField(TimelineEventForm), min_entries=1)
+    submit = SubmitField('Save Changes')
 
 class EditProfileForm(ProfileForm):
     submit = SubmitField('Update')
