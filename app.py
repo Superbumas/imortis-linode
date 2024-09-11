@@ -221,16 +221,17 @@ def view_profile(profile_id):
         return render_template('view_profile_public.html', profile=profile)
 
 
-@app.route('/profile/edit/<int:profile_id>', methods=['GET', 'POST'])
+@app.route('/edit_profile/<int:profile_id>', methods=['GET', 'POST'])
 @login_required
 def edit_profile(profile_id):
-    profile = db.session.get(Profile, profile_id)
-    if profile is None:
-        flash('Profile not found.', 'danger')
+    profile = Profile.query.get_or_404(profile_id)
+    if profile.user_id != current_user.id:
+        flash('You do not have permission to edit this profile.', 'danger')
         return redirect(url_for('dashboard'))
-    
+
     form = EditProfileForm(obj=profile)
-        # Populate timeline_events with existing events or at least one empty entry
+    
+    # Populate timeline_events with existing events or at least one empty entry
     if request.method == 'GET':
         for event in profile.timeline_events:
             form.timeline_events.append_entry({
@@ -239,12 +240,16 @@ def edit_profile(profile_id):
             })
         if not profile.timeline_events:
             form.timeline_events.append_entry()
-            
+
     if form.validate_on_submit():
         try:
             profile.first_name = form.first_name.data
             profile.last_name = form.last_name.data
             profile.bio = form.bio.data
+            profile.date_of_birth = form.date_of_birth.data
+            profile.date_of_death = form.date_of_death.data
+            profile.country = form.country.data
+            profile.city = form.city.data
 
             if form.profile_picture.data:
                 filename = secure_filename(form.profile_picture.data.filename)
@@ -260,11 +265,6 @@ def edit_profile(profile_id):
                 form.cover_photo.data.save(upload_path)
                 profile.cover_photo = filename
 
-            profile.date_of_birth = form.date_of_birth.data
-            profile.date_of_death = form.date_of_death.data
-            profile.country = form.country.data
-            profile.city = form.city.data
-
             # Clear existing timeline events
             TimelineEvent.query.filter_by(profile_id=profile.id).delete()
 
@@ -275,15 +275,15 @@ def edit_profile(profile_id):
                     event_text=event_form.event_text.data,
                     profile_id=profile.id
                 )
-                profile.timeline_events.append(event)
+                db.session.add(event)
 
             db.session.commit()
             flash('Profile updated successfully!', 'success')
-            return redirect(url_for('view_profile', profile_id=profile.id))
+            return redirect(url_for('dashboard'))
         except Exception as e:
             db.session.rollback()
             flash(f'An error occurred: {str(e)}', 'danger')
-    
+
     return render_template('edit_profile.html', form=form, profile=profile)
 
 @app.route('/delete_profile/<int:profile_id>', methods=['POST'])
