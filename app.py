@@ -209,6 +209,7 @@ def view_profile(profile_id):
     delete_form = DeleteProfileForm()
     return render_template('view_profile.html', profile=profile, form=delete_form)
 
+
 @app.route('/update_profile/<int:profile_id>', methods=['GET', 'POST'])
 @login_required
 def update_profile(profile_id):
@@ -248,6 +249,24 @@ def update_profile(profile_id):
             flash(f'An error occurred: {str(e)}', 'danger')
     
     return render_template('edit_profile.html', form=form, profile=profile)
+
+@app.route('/delete_profile/<int:profile_id>', methods=['POST'])
+@login_required
+def delete_profile(profile_id):
+    profile = Profile.query.get_or_404(profile_id)
+    if profile.user_id != current_user.id:
+        flash('You do not have permission to delete this profile.', 'danger')
+        return redirect(url_for('dashboard'))
+    
+    try:
+        db.session.delete(profile)
+        db.session.commit()
+        flash('Profile deleted successfully!', 'success')
+    except Exception as e:
+        db.session.rollback()
+        flash(f'An error occurred: {str(e)}', 'danger')
+    
+    return redirect(url_for('dashboard'))
 
 
 @app.route('/api/profiles')
