@@ -3,6 +3,7 @@ from wtforms import StringField, TextAreaField, DateField, FileField, SubmitFiel
 from wtforms.validators import DataRequired, Length
 from flask_wtf.file import FileAllowed
 
+
 # List of countries
 COUNTRIES = [
     ('US', 'United States'), ('CA', 'Canada'), ('MX', 'Mexico'), 
@@ -29,8 +30,11 @@ class EditProfileForm(FlaskForm):
     timeline_events = FieldList(FormField(TimelineEventForm), min_entries=1)
     submit = SubmitField('Save Changes')
 
-#class EditProfileForm(ProfileForm):
-#    submit = SubmitField('Update')
+class ProfileForm(FlaskForm):
+    pass
+
+class EditProfileForm(ProfileForm):
+    submit = SubmitField('Update')
 
 class DeleteProfileForm(FlaskForm):
     submit = SubmitField('Delete')
