@@ -52,7 +52,7 @@ class Profile(db.Model):
     date_of_death = db.Column(db.Date, nullable=True)
     country = db.Column(db.String(50), nullable=False)
     city = db.Column(db.String(50), nullable=False)
-    timeline_events = db.relationship('TimelineEvent', backref='profile', lazy=True)
+    timeline_events = db.relationship('TimelineEvent', backref='profile', lazy=True, cascade="all, delete-orphan")
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -62,10 +62,9 @@ class Profile(db.Model):
 class TimelineEvent(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     profile_id = db.Column(db.Integer, db.ForeignKey('profile.id'), nullable=False)
-    date = db.Column(db.Date, nullable=False)
-    event = db.Column(db.String(255), nullable=False)
+    event_date = db.Column(db.Date, nullable=False)
+    event_text = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     def __repr__(self):
         return f'<TimelineEvent {self.event}>'
 
@@ -220,19 +219,20 @@ def view_profile(profile_id):
         return render_template('view_profile_public.html', profile=profile)
 
 
-@app.route('/update_profile/<int:profile_id>', methods=['GET', 'POST'])
+@app.route('/profile/edit/<int:profile_id>', methods=['GET', 'POST'])
 @login_required
-def update_profile(profile_id):
-    profile = Profile.query.get_or_404(profile_id)
-    form = ProfileForm(obj=profile)
+def edit_profile(profile_id):
+    profile = db.session.get(Profile, profile_id)
+    if profile is None:
+        flash('Profile not found.', 'danger')
+        return redirect(url_for('dashboard'))
     
+    form = EditProfileForm(obj=profile)
     if form.validate_on_submit():
         try:
             profile.first_name = form.first_name.data
             profile.last_name = form.last_name.data
             profile.bio = form.bio.data
-            profile.timelinedate = form.timelinedate.data  # Add this line
-            profile.timelinetext = form.timelinetext.data
 
             if form.profile_picture.data:
                 filename = secure_filename(form.profile_picture.data.filename)
@@ -252,6 +252,18 @@ def update_profile(profile_id):
             profile.date_of_death = form.date_of_death.data
             profile.country = form.country.data
             profile.city = form.city.data
+
+            # Clear existing timeline events
+            profile.timeline_events.clear()
+
+            # Add new timeline events
+            for event_form in form.timeline_events.entries:
+                event = TimelineEvent(
+                    event_date=event_form.event_date.data,
+                    event_text=event_form.event_text.data,
+                    profile_id=profile.id
+                )
+                profile.timeline_events.append(event)
 
             db.session.commit()
             flash('Profile updated successfully!', 'success')
