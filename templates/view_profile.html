@@ -23,7 +23,7 @@
     <div class="text-center">
         <h2 class="text-xl text-gray-500">In Loving Memory of</h2>
         <h1 class="text-3xl font-bold">{{ profile.first_name }} {{ profile.last_name }}</h1>
-        <p class="text-gray-600">{{ profile.date_of_birth.strftime('%b %d, %Y') }} - {{ profile.date_of_death.strftime('%b %d, %Y') }}</p>
+        <p class="text-gray-600">{{ profile.date_of_birth.strftime('%b %d, %Y') }} - {{ profile.date_of_death.strftime('%b %d, %Y') if profile.date_of_death else 'Present' }}</p>
         <div class="mt-4 flex justify-center space-x-4">
             <button class="bg-white border border-yellow-500 text-yellow-500 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Favorite</button>
             <button class="bg-white border border-yellow-500 text-yellow-500 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Share</button>
@@ -39,7 +39,11 @@
         <div class="mt-6">
             <div id="timeline">
                 <h3 class="text-xl font-bold mb-2">Timeline</h3>
-                <p class="text-gray-700">{{ profile.timelinedate.strftime('%b %d, %Y') }} - {{ profile.timelinetext }}</p>
+                {% if profile.timelinedate %}
+                    <p class="text-gray-700">{{ profile.timelinedate.strftime('%b %d, %Y') }} - {{ profile.timelinetext }}</p>
+                {% else %}
+                    <p class="text-gray-700">No timeline data available.</p>
+                {% endif %}
             </div>
             <div id="bio" class="hidden">
                 <h3 class="text-xl font-bold mb-2">Bio</h3>
