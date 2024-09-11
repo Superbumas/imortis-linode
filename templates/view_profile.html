@@ -8,15 +8,15 @@
 <div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md">
     <div class="text-center mb-6">
         {% if profile.cover_photo %}
-            <img src="{{ url_for('static', filename='uploads/' ~ profile.cover_photo) }}" alt="Cover Photo" class="w-full h-80 object-cover rounded-t-lg lightbox-trigger"> <!-- Increased height by 20% -->
+            <img src="{{ url_for('static', filename='uploads/' ~ profile.cover_photo) }}" alt="Cover Photo" class="w-full h-96 object-cover rounded-t-lg lightbox-trigger"> <!-- Increased height by 20% -->
         {% else %}
-            <div class="w-full h-80 bg-gray-200 rounded-t-lg"></div> <!-- Increased height by 20% -->
+            <div class="w-full h-96 bg-gray-200 rounded-t-lg"></div> <!-- Increased height by 20% -->
         {% endif %}
-        <div class="relative -mt-20"> <!-- Adjusted margin-top to match the increased size -->
+        <div class="relative flex justify-center -mt-24"> <!-- Adjusted margin-top to match the increased size and centralized logo -->
             {% if profile.profile_picture %}
-                <img src="{{ url_for('static', filename='uploads/' ~ profile.profile_picture) }}" alt="{{ profile.first_name }} {{ profile.last_name }}" class="w-38 h-38 rounded-full mx-auto border-4 border-white lightbox-trigger"> <!-- Increased width and height by 20% -->
+                <img src="{{ url_for('static', filename='uploads/' ~ profile.profile_picture) }}" alt="{{ profile.first_name }} {{ profile.last_name }}" class="w-48 h-48 md:w-64 md:h-64 rounded-full border-4 border-white lightbox-trigger"> <!-- Adjusted size for different screen sizes -->
             {% else %}
-                <div class="w-38 h-38 rounded-full bg-gray-200 mx-auto border-4 border-white"></div> <!-- Increased width and height by 20% -->
+                <div class="w-48 h-48 md:w-64 md:h-64 rounded-full bg-gray-200 border-4 border-white"></div> <!-- Adjusted size for different screen sizes -->
             {% endif %}
         </div>
     </div>
