@@ -49,6 +49,8 @@ class Profile(db.Model):
     date_of_death = db.Column(db.Date, nullable=True)
     country = db.Column(db.String(50), nullable=False)
     city = db.Column(db.String(50), nullable=False)
+    timelinedate = db.Column(db.Date, nullable=True) 
+    timelinetext = db.Column(db.Text, nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
