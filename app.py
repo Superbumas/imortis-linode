@@ -14,6 +14,9 @@ import base64
 import logging
 import io
 from forms import DeleteProfileForm, ProfileForm
+from flask_wtf.file import FileField, FileAllowed, FileRequired
+
+
 
 # Flask app configuration
 app = Flask(__name__)
@@ -204,10 +207,14 @@ def create_profile():
             flash(f'An error occurred: {str(e)}', 'danger')
     return render_template('create_profile.html', form=form)
 
-@app.route('/profile/<int:profile_id>')
+@app.route('/profile/<int:profile_id>', methods=['GET'])
 @login_required
 def view_profile(profile_id):
-    profile = Profile.query.get_or_404(profile_id)
+    profile = db.session.get(Profile, profile_id)  # Updated to use Session.get()
+    if profile is None:
+        flash('Profile not found.', 'danger')
+        return redirect(url_for('dashboard'))
+    
     delete_form = DeleteProfileForm()
     return render_template('view_profile.html', profile=profile, form=delete_form)
 
