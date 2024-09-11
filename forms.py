@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField, DateField, FileField, SubmitField
+from wtforms import StringField, TextAreaField, DateField, FileField, SubmitField, FieldList, FormField
 from wtforms.validators import DataRequired, Length, Optional
 from wtforms.fields import SelectField
 
@@ -12,6 +12,10 @@ COUNTRIES = [
     # You can add a comprehensive list of countries here
 ]
 
+class TimelineEventForm(FlaskForm):
+    event_date = DateField('Event Date', validators=[DataRequired()])
+    event_text = TextAreaField('Event Text', validators=[DataRequired()])
+
 class ProfileForm(FlaskForm):
     first_name = StringField('First Name', validators=[DataRequired()])
     last_name = StringField('Last Name', validators=[DataRequired()])
@@ -22,8 +26,7 @@ class ProfileForm(FlaskForm):
     date_of_death = DateField('Date of Death', format='%Y-%m-%d', validators=[DataRequired()])
     country = SelectField('Country', choices=COUNTRIES, validators=[DataRequired()])
     city = StringField('City', validators=[DataRequired()])
-    timelinedate = DateField('Timeline Date', format='%Y-%m-%d')
-    timelinetext = TextAreaField('Timeline Text')  
+    timeline_events = FieldList(FormField(TimelineEventForm), min_entries=1)
     submit = SubmitField('Create Profile')
 
 class DeleteProfileForm(FlaskForm):
