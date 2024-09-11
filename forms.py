@@ -45,6 +45,7 @@ class EditProfileForm(FlaskForm):
     date_of_death = DateField('Date of Death', format='%Y-%m-%d', validators=[DataRequired()])
     country = SelectField('Country', choices=COUNTRIES, validators=[DataRequired()])
     city = StringField('City', validators=[DataRequired()])
+    timeline_events = FieldList(FormField(TimelineEventForm), min_entries=1)
     submit = SubmitField('Save Changes')
 
 class EditTimelineForm(FlaskForm):

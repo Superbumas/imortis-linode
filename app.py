@@ -239,6 +239,7 @@ def edit_profile(profile_id):
             })
         if not profile.timeline_events:
             form.timeline_events.append_entry()
+            
     if form.validate_on_submit():
         try:
             profile.first_name = form.first_name.data
