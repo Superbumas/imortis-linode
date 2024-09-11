@@ -40,14 +40,15 @@ class User(db.Model, UserMixin):
 
 class Profile(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False, unique=True)
-    bio = db.Column(db.Text, nullable=False)
-    date_of_birth = db.Column(db.Date, nullable=False)
-    date_of_death = db.Column(db.Date, nullable=False)
+    first_name = db.Column(db.String(50), nullable=False)
+    last_name = db.Column(db.String(50), nullable=False)
+    bio = db.Column(db.Text, nullable=True)
     profile_picture = db.Column(db.String(100), nullable=True)
+    cover_photo = db.Column(db.String(100), nullable=True)
+    email = db.Column(db.String(100), nullable=True)
+    country = db.Column(db.String(50), nullable=False)
+    city = db.Column(db.String(50), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    user = db.relationship('User', backref=db.backref('profiles', lazy=True))
-    timelines = db.relationship('Timeline', backref='profile', lazy=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
@@ -177,12 +178,23 @@ def create_profile():
                 form.profile_picture.data.save(upload_path)
                 profile_picture = filename
 
+            cover_photo = None
+            if form.cover_photo.data:
+                filename = secure_filename(form.cover_photo.data.filename)
+                upload_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                os.makedirs(os.path.dirname(upload_path), exist_ok=True)
+                form.cover_photo.data.save(upload_path)
+                cover_photo = filename
+
             new_profile = Profile(
-                name=form.name.data,
+                first_name=form.first_name.data,
+                last_name=form.last_name.data,
                 bio=form.bio.data,
-                date_of_birth=form.date_of_birth.data,
-                date_of_death=form.date_of_death.data,
                 profile_picture=profile_picture,
+                cover_photo=cover_photo,
+                email=form.email.data,
+                country=form.country.data,
+                city=form.city.data,
                 user_id=current_user.id
             )
             db.session.add(new_profile)
