@@ -230,6 +230,15 @@ def edit_profile(profile_id):
         return redirect(url_for('dashboard'))
     
     form = EditProfileForm(obj=profile)
+        # Populate timeline_events with existing events or at least one empty entry
+    if request.method == 'GET':
+        for event in profile.timeline_events:
+            form.timeline_events.append_entry({
+                'event_date': event.event_date,
+                'event_text': event.event_text
+            })
+        if not profile.timeline_events:
+            form.timeline_events.append_entry()
     if form.validate_on_submit():
         try:
             profile.first_name = form.first_name.data
@@ -256,7 +265,7 @@ def edit_profile(profile_id):
             profile.city = form.city.data
 
             # Clear existing timeline events
-            profile.timeline_events.clear()
+            TimelineEvent.query.filter_by(profile_id=profile.id).delete()
 
             # Add new timeline events
             for event_form in form.timeline_events.entries:
