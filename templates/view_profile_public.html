@@ -5,18 +5,18 @@
 {% block page_title %}Profile{% endblock %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md">
+<div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md sm:p-4 sm:rounded-none sm:shadow-none sm:w-full sm:h-full">
     <div class="text-center mb-6">
         {% if profile.cover_photo %}
-            <img src="{{ url_for('static', filename='uploads/' ~ profile.cover_photo) }}" alt="Cover Photo" class="w-full h-96 object-cover rounded-t-lg lightbox-trigger"> <!-- Increased height by another 20% -->
+            <img src="{{ url_for('static', filename='uploads/' ~ profile.cover_photo) }}" alt="Cover Photo" class="w-full h-96 object-cover rounded-t-lg lightbox-trigger sm:h-64"> <!-- Adjusted height for mobile -->
         {% else %}
-            <div class="w-full h-96 bg-gray-200 rounded-t-lg"></div> <!-- Increased height by another 20% -->
+            <div class="w-full h-96 bg-gray-200 rounded-t-lg sm:h-64"></div> <!-- Adjusted height for mobile -->
         {% endif %}
-        <div class="relative -mt-24"> <!-- Adjusted margin-top to match the increased size -->
+        <div class="relative -mt-24 sm:-mt-16"> <!-- Adjusted margin-top for mobile -->
             {% if profile.profile_picture %}
-                <img src="{{ url_for('static', filename='uploads/' ~ profile.profile_picture) }}" alt="{{ profile.first_name }} {{ profile.last_name }}" class="w-48 h-48 rounded-full mx-auto border-4 border-white lightbox-trigger"> <!-- Increased width and height by another 20% -->
+                <img src="{{ url_for('static', filename='uploads/' ~ profile.profile_picture) }}" alt="{{ profile.first_name }} {{ profile.last_name }}" class="w-48 h-48 rounded-full mx-auto border-4 border-white lightbox-trigger sm:w-32 sm:h-32"> <!-- Adjusted size for mobile -->
             {% else %}
-                <div class="w-48 h-48 rounded-full bg-gray-200 mx-auto border-4 border-white"></div> <!-- Increased width and height by another 20% -->
+                <div class="w-48 h-48 rounded-full bg-gray-200 mx-auto border-4 border-white sm:w-32 sm:h-32"></div> <!-- Adjusted size for mobile -->
             {% endif %}
         </div>
     </div>
