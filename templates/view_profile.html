@@ -8,13 +8,13 @@
 <div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md">
     <div class="text-center mb-6">
         {% if profile.cover_photo %}
-            <img src="{{ url_for('static', filename='uploads/' ~ profile.cover_photo) }}" alt="Cover Photo" class="w-full h-64 object-cover rounded-t-lg">
+            <img src="{{ url_for('static', filename='uploads/' ~ profile.cover_photo) }}" alt="Cover Photo" class="w-full h-64 object-cover rounded-t-lg lightbox-trigger">
         {% else %}
             <div class="w-full h-64 bg-gray-200 rounded-t-lg"></div>
         {% endif %}
         <div class="relative -mt-16">
             {% if profile.profile_picture %}
-                <img src="{{ url_for('static', filename='uploads/' ~ profile.profile_picture) }}" alt="{{ profile.first_name }} {{ profile.last_name }}" class="w-32 h-32 rounded-full mx-auto border-4 border-white">
+                <img src="{{ url_for('static', filename='uploads/' ~ profile.profile_picture) }}" alt="{{ profile.first_name }} {{ profile.last_name }}" class="w-32 h-32 rounded-full mx-auto border-4 border-white lightbox-trigger">
             {% else %}
                 <div class="w-32 h-32 rounded-full bg-gray-200 mx-auto border-4 border-white"></div>
             {% endif %}
@@ -53,12 +53,12 @@
                 <h3 class="text-xl font-bold mb-2">Media</h3>
                 <div class="grid grid-cols-2 gap-4">
                     {% if profile.profile_picture %}
-                        <img src="{{ url_for('static', filename='uploads/' ~ profile.profile_picture) }}" alt="Profile Picture" class="w-full h-48 object-cover rounded-lg">
+                        <img src="{{ url_for('static', filename='uploads/' ~ profile.profile_picture) }}" alt="Profile Picture" class="w-full h-48 object-cover rounded-lg lightbox-trigger">
                     {% else %}
                         <div class="w-full h-48 bg-gray-200 rounded-lg"></div>
                     {% endif %}
                     {% if profile.cover_photo %}
-                        <img src="{{ url_for('static', filename='uploads/' ~ profile.cover_photo) }}" alt="Cover Photo" class="w-full h-48 object-cover rounded-lg">
+                        <img src="{{ url_for('static', filename='uploads/' ~ profile.cover_photo) }}" alt="Cover Photo" class="w-full h-48 object-cover rounded-lg lightbox-trigger">
                     {% else %}
                         <div class="w-full h-48 bg-gray-200 rounded-lg"></div>
                     {% endif %}
@@ -80,10 +80,21 @@
     </div>
 </div>
 
+<!-- Lightbox HTML -->
+<div id="lightbox" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75 hidden">
+    <div class="relative max-w-3xl w-full">
+        <span id="lightbox-close" class="absolute top-4 right-4 text-white text-3xl cursor-pointer">&times;</span>
+        <img id="lightbox-img" src="" alt="" class="w-full h-auto">
+    </div>
+</div>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const tabLinks = document.querySelectorAll('.tab-link');
         const tabContents = document.querySelectorAll('.tab-content');
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        const lightboxClose = document.getElementById('lightbox-close');
 
         tabLinks.forEach(link => {
             link.addEventListener('click', function(event) {
@@ -96,6 +107,18 @@
                 tabContents.forEach(content => content.classList.add('hidden'));
                 document.getElementById(targetTab).classList.remove('hidden');
             });
+        });
+
+        document.querySelectorAll('.lightbox-trigger').forEach(image => {
+            image.addEventListener('click', function() {
+                lightboxImg.src = this.src;
+                lightboxImg.alt = this.alt;
+                lightbox.classList.remove('hidden');
+            });
+        });
+
+        lightboxClose.addEventListener('click', function() {
+            lightbox.classList.add('hidden');
         });
 
         // Show the first tab by default
