@@ -15,7 +15,7 @@ COUNTRIES = [
 
 class TimelineEventForm(FlaskForm):
     event_date = DateField('Event Date', format='%Y-%m-%d', validators=[DataRequired()])
-    event_text = TextAreaField('Event Text', validators=[DataRequired(), Length(max=255)])
+    event_text = StringField('Event Text', validators=[DataRequired(), Length(max=500)])
 
 class ProfileForm(FlaskForm):
     first_name = StringField('First Name', validators=[DataRequired(), Length(max=50)])
