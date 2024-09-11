@@ -2,28 +2,30 @@
 
 {% block title %}Profile - {{ profile.first_name }} {{ profile.last_name }}{% endblock %}
 
+{% block page_title %}Profile{% endblock %}
+
 {% block content %}
 <div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md">
     <div class="text-center mb-6">
         {% if profile.cover_photo %}
-            <img src="{{ url_for('static', filename='uploads/' ~ profile.cover_photo) }}" alt="Cover Photo" class="w-full h-64 object-cover rounded-t-lg lightbox-trigger">
+            <img src="{{ url_for('static', filename='uploads/' ~ profile.cover_photo) }}" alt="Cover Photo" class="w-full h-80 object-cover rounded-t-lg lightbox-trigger"> <!-- Increased height by 20% -->
         {% else %}
-            <div class="w-full h-64 bg-gray-200 rounded-t-lg"></div>
+            <div class="w-full h-80 bg-gray-200 rounded-t-lg"></div> <!-- Increased height by 20% -->
         {% endif %}
-        <div class="relative -mt-16">
+        <div class="relative -mt-20"> <!-- Adjusted margin-top to match the increased size -->
             {% if profile.profile_picture %}
-                <img src="{{ url_for('static', filename='uploads/' ~ profile.profile_picture) }}" alt="{{ profile.first_name }} {{ profile.last_name }}" class="w-32 h-32 rounded-full mx-auto border-4 border-white lightbox-trigger">
+                <img src="{{ url_for('static', filename='uploads/' ~ profile.profile_picture) }}" alt="{{ profile.first_name }} {{ profile.last_name }}" class="w-38 h-38 rounded-full mx-auto border-4 border-white lightbox-trigger"> <!-- Increased width and height by 20% -->
             {% else %}
-                <div class="w-32 h-32 rounded-full bg-gray-200 mx-auto border-4 border-white"></div>
+                <div class="w-38 h-38 rounded-full bg-gray-200 mx-auto border-4 border-white"></div> <!-- Increased width and height by 20% -->
             {% endif %}
         </div>
     </div>
     <div class="text-center">
-        <h2 class="text-xl text-gray-500">In Loving Memory of</h2>
+        <h2 class="text-sm text-gray-500">In Loving Memory of</h2>
         <h1 class="text-3xl font-bold">{{ profile.first_name }} {{ profile.last_name }}</h1>
         <p class="text-gray-600">{{ profile.date_of_birth.strftime('%b %d, %Y') }} - {{ profile.date_of_death.strftime('%b %d, %Y') if profile.date_of_death else 'Present' }}</p>
         <div class="mt-4 flex justify-center space-x-4">
-            <a href="{{ url_for('edit_profile', profile_id=profile.id) }}" class="bg-blue-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Edit Profile</a>
+            <button id="share-button" class="bg-white border border-yellow-500 text-yellow-500 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Share</button>
         </div>
     </div>
     <div class="mt-8">
@@ -36,10 +38,8 @@
         <div class="mt-6">
             <div id="timeline" class="tab-content">
                 <h3 class="text-xl font-bold mb-2">Timeline</h3>
-                {% if profile.timeline_events %}
-                    {% for event in profile.timeline_events %}
-                        <p class="text-gray-700">{{ event.event_date.strftime('%b %d, %Y') }} - {{ event.event_text }}</p>
-                    {% endfor %}
+                {% if profile.timelinedate %}
+                    <p class="text-gray-700">{{ profile.timelinedate.strftime('%b %d, %Y') }} - {{ profile.timelinetext }}</p>
                 {% else %}
                     <div class="flex flex-col items-center justify-center mt-10">
                         <svg class="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -85,6 +85,25 @@
     </div>
 </div>
 
+<!-- Share Dialog HTML -->
+<div id="share-dialog" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75 hidden">
+    <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+        <h2 class="text-xl font-bold mb-4">Share this profile</h2>
+        <div class="mb-4">
+            <input id="share-url" type="text" class="w-full p-2 border border-gray-300 rounded" value="{{ request.url }}" readonly>
+        </div>
+        <div class="flex justify-between space-x-4">
+            <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.url }}" target="_blank" class="text-blue-600 hover:text-blue-800 text-3xl"><i class="fab fa-facebook"></i></a>
+            <a href="https://twitter.com/intent/tweet?url={{ request.url }}&text=Check out this profile on our site." target="_blank" class="text-blue-400 hover:text-blue-600 text-3xl"><i class="fab fa-twitter"></i></a>
+            <a href="mailto:?subject=Check out this profile&body={{ request.url }}" class="text-red-600 hover:text-red-800 text-3xl"><i class="fas fa-envelope"></i></a>
+            <button id="copy-url" class="text-gray-500 hover:text-gray-700 text-3xl"><i class="fas fa-link"></i></button>
+        </div>
+        <div class="flex justify-end mt-4">
+            <button id="close-share-dialog" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Close</button>
+        </div>
+    </div>
+</div>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const tabLinks = document.querySelectorAll('.tab-link');
@@ -92,6 +111,11 @@
         const lightbox = document.getElementById('lightbox');
         const lightboxImg = document.getElementById('lightbox-img');
         const lightboxClose = document.getElementById('lightbox-close');
+        const shareButton = document.getElementById('share-button');
+        const shareDialog = document.getElementById('share-dialog');
+        const closeShareDialog = document.getElementById('close-share-dialog');
+        const copyUrlButton = document.getElementById('copy-url');
+        const shareUrlInput = document.getElementById('share-url');
 
         tabLinks.forEach(link => {
             link.addEventListener('click', function(event) {
@@ -120,6 +144,32 @@
 
         // Show the first tab by default
         tabLinks[0].click();
+
+        // Share button functionality
+        shareButton.addEventListener('click', function() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Profile of {{ profile.first_name }} {{ profile.last_name }}',
+                    text: 'Check out this profile on our site.',
+                    url: window.location.href
+                }).then(() => {
+                    console.log('Thanks for sharing!');
+                }).catch(console.error);
+            } else {
+                // Fallback for browsers that do not support the Web Share API
+                shareDialog.classList.remove('hidden');
+            }
+        });
+
+        closeShareDialog.addEventListener('click', function() {
+            shareDialog.classList.add('hidden');
+        });
+
+        copyUrlButton.addEventListener('click', function() {
+            shareUrlInput.select();
+            document.execCommand('copy');
+            alert('URL copied to clipboard. You can now share it manually.');
+        });
     });
 </script>
 {% endblock %}
