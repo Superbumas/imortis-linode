@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, TextAreaField, DateField, FileField, SubmitField
 from wtforms.validators import DataRequired, Length
+from wtforms.fields import SelectField
 
 # List of countries
 COUNTRIES = [
@@ -9,7 +10,8 @@ COUNTRIES = [
     ('GB', 'United Kingdom'), ('FR', 'France'), ('DE', 'Germany'), 
     ('IN', 'India'), ('CN', 'China'), ('JP', 'Japan')
     # You can add a comprehensive list of countries here
-    
+]
+
 class ProfileForm(FlaskForm):
     first_name = StringField('First Name', validators=[DataRequired()])
     last_name = StringField('Last Name', validators=[DataRequired()])
