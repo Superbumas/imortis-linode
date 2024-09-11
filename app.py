@@ -13,7 +13,7 @@ import os
 import base64
 import logging
 import io
-from forms import DeleteProfileForm, ProfileForm
+from forms import DeleteProfileForm, ProfileForm, EditProfileForm, EditTimelineForm
 from flask_wtf.file import FileField, FileAllowed, FileRequired
 
 
@@ -227,7 +227,7 @@ def edit_profile(profile_id):
         flash('Profile not found.', 'danger')
         return redirect(url_for('dashboard'))
     
-    form = ProfileForm(obj=profile)
+    form = EditProfileForm(obj=profile)
     if form.validate_on_submit():
         try:
             profile.first_name = form.first_name.data
