@@ -45,12 +45,14 @@ class Profile(db.Model):
     bio = db.Column(db.Text, nullable=True)
     profile_picture = db.Column(db.String(100), nullable=True)
     cover_photo = db.Column(db.String(100), nullable=True)
-    email = db.Column(db.String(100), nullable=True)
+    date_of_birth = db.Column(db.Date, nullable=False)
+    date_of_death = db.Column(db.Date, nullable=True)
     country = db.Column(db.String(50), nullable=False)
     city = db.Column(db.String(50), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
     def __repr__(self):
         return f'<Profile {self.name}>'
 
