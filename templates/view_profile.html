@@ -8,20 +8,20 @@
 <div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md">
     <div class="text-center mb-6">
         {% if profile.cover_photo %}
-            <img src="{{ url_for('static', filename='uploads/' ~ profile.cover_photo) }}" alt="Cover Photo" class="w-full h-96 object-cover rounded-t-lg lightbox-trigger"> <!-- Increased height by another 20% -->
+            <img src="{{ url_for('static', filename='uploads/' ~ profile.cover_photo) }}" alt="Cover Photo" class="w-full h-80 object-cover rounded-t-lg lightbox-trigger"> <!-- Increased height by 20% -->
         {% else %}
-            <div class="w-full h-96 bg-gray-200 rounded-t-lg"></div> <!-- Increased height by another 20% -->
+            <div class="w-full h-80 bg-gray-200 rounded-t-lg"></div> <!-- Increased height by 20% -->
         {% endif %}
-        <div class="relative -mt-24"> <!-- Adjusted margin-top to match the increased size -->
+        <div class="relative -mt-20"> <!-- Adjusted margin-top to match the increased size -->
             {% if profile.profile_picture %}
-                <img src="{{ url_for('static', filename='uploads/' ~ profile.profile_picture) }}" alt="{{ profile.first_name }} {{ profile.last_name }}" class="w-46 h-46 rounded-full mx-auto border-4 border-white lightbox-trigger"> <!-- Increased width and height by another 20% -->
+                <img src="{{ url_for('static', filename='uploads/' ~ profile.profile_picture) }}" alt="{{ profile.first_name }} {{ profile.last_name }}" class="w-38 h-38 rounded-full mx-auto border-4 border-white lightbox-trigger"> <!-- Increased width and height by 20% -->
             {% else %}
-                <div class="w-46 h-46 rounded-full bg-gray-200 mx-auto border-4 border-white"></div> <!-- Increased width and height by another 20% -->
+                <div class="w-38 h-38 rounded-full bg-gray-200 mx-auto border-4 border-white"></div> <!-- Increased width and height by 20% -->
             {% endif %}
         </div>
     </div>
     <div class="text-center">
-        <h2 class="text-sm text-gray-500">In Loving Memory of</h2> <!-- Reduced text size -->
+        <h2 class="text-sm text-gray-500">In Loving Memory of</h2>
         <h1 class="text-3xl font-bold">{{ profile.first_name }} {{ profile.last_name }}</h1>
         <p class="text-gray-600">{{ profile.date_of_birth.strftime('%b %d, %Y') }} - {{ profile.date_of_death.strftime('%b %d, %Y') if profile.date_of_death else 'Present' }}</p>
         <div class="mt-4 flex justify-center space-x-4">
