@@ -19,7 +19,7 @@ class ProfileForm(FlaskForm):
     profile_picture = FileField('Profile Picture', validators=[Optional()])
     cover_photo = FileField('Cover Photo', validators=[Optional()])
     date_of_birth = DateField('Date of Birth', format='%Y-%m-%d', validators=[DataRequired()])
-    date_of_death = DateField('Date of Death', format='%Y-%m-%d', validators=[Optional()])
+    date_of_death = DateField('Date of Death', format='%Y-%m-%d', validators=[DataRequired()])
     country = SelectField('Country', choices=COUNTRIES, validators=[DataRequired()])
     city = StringField('City', validators=[DataRequired()])
     submit = SubmitField('Create Profile')
