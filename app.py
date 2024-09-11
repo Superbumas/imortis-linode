@@ -200,15 +200,17 @@ def create_profile():
     return render_template('create_profile.html', form=form)
 
 @app.route('/profile/<int:profile_id>', methods=['GET'])
-@login_required
 def view_profile(profile_id):
-    profile = db.session.get(Profile, profile_id)  # Updated to use Session.get()
+    profile = db.session.get(Profile, profile_id)
     if profile is None:
         flash('Profile not found.', 'danger')
         return redirect(url_for('dashboard'))
     
-    delete_form = DeleteProfileForm()
-    return render_template('view_profile.html', profile=profile, form=delete_form)
+    if current_user.is_authenticated:
+        delete_form = DeleteProfileForm()
+        return render_template('view_profile.html', profile=profile, form=delete_form)
+    else:
+        return render_template('view_profile_public.html', profile=profile)
 
 
 @app.route('/update_profile/<int:profile_id>', methods=['GET', 'POST'])
