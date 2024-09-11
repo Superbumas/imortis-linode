@@ -1,16 +1,109 @@
-{% extends "base.html" %}
-
-{% block title %}Home{% endblock %}
-
-{% block content %}
-<div class="container mx-auto p-5 w-full">
-    <div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md">
-        <h2 class="text-2xl font-bold mb-4">Welcome to the Social Site for the Deceased</h2>
-        <p class="mb-4">This is a platform where you can create and manage profiles for your loved ones who have passed away. Share their stories, memories, and keep their legacy alive.</p>
-        <div class="flex space-x-4">
-            <a href="{{ url_for('register') }}" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Register</a>
-            <a href="{{ url_for('login') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Login</a>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Imortis</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        /* Add any additional custom styles here */
+    </style>
+</head>
+<body class="bg-gray-900 text-white">
+    <!-- Header Section -->
+    <header class="bg-gray-800 py-8">
+        <div class="container mx-auto text-center">
+            <img src="path/to/logo.png" alt="Imortis Logo" class="mx-auto w-48 h-48 rounded-full">
+            <h1 class="text-4xl font-bold mt-4">Imortis</h1>
+            <p class="text-lg mt-2">Modernus būdas įamžinti artimųjų atminimą</p>
+            <button class="mt-4 px-6 py-2 bg-yellow-500 text-gray-900 font-bold rounded">Sukurti atminimo puslapį</button>
         </div>
-    </div>
-</div>
-{% endblock %}
+    </header>
+
+    <!-- Info Cards Section -->
+    <section class="py-16 bg-gray-700">
+        <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="bg-gray-800 p-8 rounded-lg text-center">
+                <h2 class="text-2xl font-bold mb-4">Lorem Ipsum</h2>
+                <p class="text-gray-400">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            </div>
+            <div class="bg-gray-800 p-8 rounded-lg text-center">
+                <h2 class="text-2xl font-bold mb-4">Lorem Ipsum</h2>
+                <p class="text-gray-400">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            </div>
+            <div class="bg-gray-800 p-8 rounded-lg text-center">
+                <h2 class="text-2xl font-bold mb-4">Lorem Ipsum</h2>
+                <p class="text-gray-400">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-16 bg-gray-800">
+        <div class="container mx-auto text-center">
+            <h2 class="text-3xl font-bold mb-8">Features</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-gray-700 p-8 rounded-lg">
+                    <img src="path/to/icon1.png" alt="Feature 1" class="mx-auto mb-4">
+                    <h3 class="text-2xl font-bold mb-2">Feature 1</h3>
+                    <p class="text-gray-400">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                </div>
+                <div class="bg-gray-700 p-8 rounded-lg">
+                    <img src="path/to/icon2.png" alt="Feature 2" class="mx-auto mb-4">
+                    <h3 class="text-2xl font-bold mb-2">Feature 2</h3>
+                    <p class="text-gray-400">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                </div>
+                <div class="bg-gray-700 p-8 rounded-lg">
+                    <img src="path/to/icon3.png" alt="Feature 3" class="mx-auto mb-4">
+                    <h3 class="text-2xl font-bold mb-2">Feature 3</h3>
+                    <p class="text-gray-400">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section class="py-16 bg-gray-900">
+        <div class="container mx-auto text-center">
+            <h2 class="text-3xl font-bold mb-8">Gallery</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <img src="path/to/image1.jpg" alt="Gallery Image 1" class="w-full h-64 object-cover rounded-lg">
+                <img src="path/to/image2.jpg" alt="Gallery Image 2" class="w-full h-64 object-cover rounded-lg">
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="py-16 bg-gray-800">
+        <div class="container mx-auto text-center">
+            <h2 class="text-3xl font-bold mb-8">Testimonials</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-gray-700 p-8 rounded-lg">
+                    <p class="text-gray-400">"Lorem ipsum dolor sit amet, consectetur adipiscing elit."</p>
+                    <h3 class="text-xl font-bold mt-4">- John Doe</h3>
+                </div>
+                <div class="bg-gray-700 p-8 rounded-lg">
+                    <p class="text-gray-400">"Lorem ipsum dolor sit amet, consectetur adipiscing elit."</p>
+                    <h3 class="text-xl font-bold mt-4">- Jane Doe</h3>
+                </div>
+                <div class="bg-gray-700 p-8 rounded-lg">
+                    <p class="text-gray-400">"Lorem ipsum dolor sit amet, consectetur adipiscing elit."</p>
+                    <h3 class="text-xl font-bold mt-4">- John Smith</h3>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Section -->
+    <footer class="py-8 bg-gray-900">
+        <div class="container mx-auto text-center">
+            <p class="text-gray-400">&copy; 2024 Imortis. All rights reserved.</p>
+            <div class="mt-4">
+                <a href="#" class="text-gray-400 hover:text-white mx-2">Privacy Policy</a>
+                <a href="#" class="text-gray-400 hover:text-white mx-2">Terms of Service</a>
+                <a href="#" class="text-gray-400 hover:text-white mx-2">Contact Us</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
