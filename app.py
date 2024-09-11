@@ -166,8 +166,6 @@ def create_profile():
     form = ProfileForm()
     if form.validate_on_submit():
         try:
-            session.pop('_flashes', None)
-
             profile_picture = None
             if form.profile_picture.data:
                 filename = secure_filename(form.profile_picture.data.filename)
@@ -184,31 +182,25 @@ def create_profile():
                 form.cover_photo.data.save(upload_path)
                 cover_photo = filename
 
-            new_profile = Profile(
+            profile = Profile(
                 first_name=form.first_name.data,
                 last_name=form.last_name.data,
                 bio=form.bio.data,
                 profile_picture=profile_picture,
                 cover_photo=cover_photo,
+                date_of_birth=form.date_of_birth.data,
+                date_of_death=form.date_of_death.data if form.date_of_death.data else None,
                 country=form.country.data,
                 city=form.city.data,
                 user_id=current_user.id
             )
-            db.session.add(new_profile)
+            db.session.add(profile)
             db.session.commit()
             flash('Profile created successfully!', 'success')
             return redirect(url_for('dashboard'))
         except Exception as e:
             db.session.rollback()
             flash(f'An error occurred: {str(e)}', 'danger')
-    else:
-        print("Form validation failed")
-    
-    # If form validation fails, this will show errors
-    for field, errors in form.errors.items():
-        for error in errors:
-            flash(f"Error in {getattr(form, field).label.text}: {error}", 'danger')
-    
     return render_template('create_profile.html', form=form)
 
 @app.route('/profile/<int:profile_id>')
