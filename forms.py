@@ -29,8 +29,8 @@ class EditProfileForm(FlaskForm):
     timeline_events = FieldList(FormField(TimelineEventForm), min_entries=1)
     submit = SubmitField('Save Changes')
 
-class EditProfileForm(ProfileForm):
-    submit = SubmitField('Update')
+#class EditProfileForm(ProfileForm):
+#    submit = SubmitField('Update')
 
 class DeleteProfileForm(FlaskForm):
     submit = SubmitField('Delete')
