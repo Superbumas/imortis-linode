@@ -195,7 +195,7 @@ def create_profile():
                 date_of_death=form.date_of_death.data if form.date_of_death.data else None,
                 country=form.country.data,
                 city=form.city.data,
-                user_id=current_user.id
+                user_id=current_user.id,
             )
             db.session.add(profile)
             db.session.commit()
