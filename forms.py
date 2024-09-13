@@ -6,7 +6,9 @@ from wtforms import StringField, TextAreaField, DateField, FileField, SubmitFiel
 from wtforms.validators import DataRequired, Length, EqualTo
 from models import User 
 from wtforms import ValidationError
-    
+from wtforms import StringField, TextAreaField, DateField, FileField, SubmitField, FieldList, FormField, PasswordField, Email
+from wtforms.validators import DataRequired, Length, EqualTo, Email
+
 
 
 # List of countries
@@ -63,6 +65,7 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField('Sign Up')
 
     def validate_username(self, username):
+        from models import User  # Local import to avoid circular import
         user = User.query.filter_by(username=username.data).first()
         if user:
             raise ValidationError('That username is taken. Please choose a different one.')
