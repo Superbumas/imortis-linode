@@ -15,6 +15,9 @@ import logging
 import io
 from forms import DeleteProfileForm, ProfileForm, EditProfileForm, EditTimelineForm
 from flask_wtf.file import FileField, FileAllowed, FileRequired
+from forms import RegistrationForm, LoginForm, TimelineForm, SettingsForm, DeleteProfileForm
+from models import User, Profile, TimelineEvent
+
 
 
 
@@ -33,73 +36,6 @@ login_manager.login_view = 'login'
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
-
-# Models
-class User(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(100), nullable=False, unique=True)
-    email = db.Column(db.String(120), nullable=False, unique=True)  # Add this line
-    password = db.Column(db.String(255), nullable=False)
-
-class Profile(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    first_name = db.Column(db.String(50), nullable=False)
-    last_name = db.Column(db.String(50), nullable=False)
-    bio = db.Column(db.Text, nullable=True)
-    profile_picture = db.Column(db.String(100), nullable=True)
-    cover_photo = db.Column(db.String(100), nullable=True)
-    date_of_birth = db.Column(db.Date, nullable=False)
-    date_of_death = db.Column(db.Date, nullable=True)
-    country = db.Column(db.String(50), nullable=False)
-    city = db.Column(db.String(50), nullable=False)
-    timeline_events = db.relationship('TimelineEvent', backref='profile', lazy=True, cascade="all, delete-orphan")
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    def __repr__(self):
-        return f'<Profile {self.name}>'
-
-class TimelineEvent(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    profile_id = db.Column(db.Integer, db.ForeignKey('profile.id'), nullable=False)
-    event_date = db.Column(db.Date, nullable=False)
-    event_text = db.Column(db.String(500), nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    
-    # Remove the back_populates to avoid conflict
-    # profile = db.relationship('Profile', back_populates='timeline_events')
-
-# Forms
-class RegistrationForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired(), Length(min=2, max=100)])
-    email = StringField('Email', validators=[DataRequired(), Email()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
-    submit = SubmitField('Sign Up')
-
-    def validate_username(self, username):
-        user = User.query.filter_by(username=username.data).first()
-        if user:
-            raise ValidationError('That username is taken. Please choose a different one.')
-
-class LoginForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    submit = SubmitField('Login')
-
-class TimelineForm(FlaskForm):
-    date = DateField('Date', format='%Y-%m-%d', validators=[DataRequired()])
-    event = StringField('Event', validators=[DataRequired(), Length(max=255)])
-
-class SettingsForm(FlaskForm):
-    email = StringField('Email', validators=[DataRequired(), Email()])
-    current_password = PasswordField('Current Password', validators=[DataRequired()])
-    new_password = PasswordField('New Password', validators=[DataRequired(), Length(min=6)])
-    confirm_new_password = PasswordField('Confirm New Password', validators=[DataRequired(), EqualTo('new_password')])
-    submit = SubmitField('Update Settings')
-
-class DeleteProfileForm(FlaskForm):
-    submit = SubmitField('Delete')
 
 # Routes
 @app.route('/')
@@ -407,9 +343,6 @@ def disclaimer():
 @app.route('/imortis')
 def imortis():
     return render_template('imortis.html')
-
-
-
 
 
 # Run the app
