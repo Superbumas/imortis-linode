@@ -42,9 +42,6 @@ class ProfileForm(FlaskForm):
     city = StringField('City', validators=[DataRequired(), Length(max=50)])
     submit = SubmitField('Create Profile')
 
-class EditProfileForm(ProfileForm):
-    submit = SubmitField('Update')
-
 class DeleteProfileForm(FlaskForm):
     submit = SubmitField('Delete')
 
