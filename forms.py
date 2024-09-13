@@ -2,6 +2,10 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, TextAreaField, DateField, FileField, SubmitField, FieldList, FormField
 from wtforms.validators import DataRequired, Length
 from flask_wtf.file import FileAllowed
+from wtforms import StringField, TextAreaField, DateField, FileField, SubmitField, FieldList, FormField, PasswordField
+from wtforms.validators import DataRequired, Length, EqualTo
+from models import User 
+from wtforms import ValidationError
 
 
 # List of countries
