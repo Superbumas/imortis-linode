@@ -169,15 +169,13 @@ def edit_profile(profile_id):
     # Clear the form's timeline_events field before appending new entries
     form.timeline_events.entries.clear()
     
-    # Populate timeline_events with existing events or at least one empty entry
+    # Populate timeline_events with existing events
     if request.method == 'GET':
         for event in profile.timeline_events:
             form.timeline_events.append_entry({
                 'event_date': event.event_date,
                 'event_text': event.event_text
             })
-        if not profile.timeline_events:
-            form.timeline_events.append_entry()
 
     if form.validate_on_submit():
         try:
@@ -208,12 +206,13 @@ def edit_profile(profile_id):
 
             # Add new timeline events
             for event_form in form.timeline_events.entries:
-                event = TimelineEvent(
-                    event_date=event_form.event_date.data,
-                    event_text=event_form.event_text.data,
-                    profile_id=profile.id
-                )
-                db.session.add(event)
+                if event_form.event_date.data and event_form.event_text.data:
+                    event = TimelineEvent(
+                        event_date=event_form.event_date.data,
+                        event_text=event_form.event_text.data,
+                        profile_id=profile.id
+                    )
+                    db.session.add(event)
 
             db.session.commit()
             flash('Profile updated successfully!', 'success')
