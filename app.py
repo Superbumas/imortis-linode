@@ -148,11 +148,13 @@ def view_profile(profile_id):
         flash('Profile not found.', 'danger')
         return redirect(url_for('dashboard'))
     
+    timeline_events = TimelineEvent.query.filter_by(profile_id=profile_id).all()
+    
     if current_user.is_authenticated:
         delete_form = DeleteProfileForm()
-        return render_template('view_profile.html', profile=profile, form=delete_form)
+        return render_template('view_profile.html', profile=profile, timeline_events=timeline_events, form=delete_form)
     else:
-        return render_template('view_profile_public.html', profile=profile)
+        return render_template('view_profile_public.html', profile=profile, timeline_events=timeline_events)
 
 @app.route('/edit_profile/<int:profile_id>', methods=['GET', 'POST'])
 @login_required

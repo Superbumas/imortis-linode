@@ -38,8 +38,14 @@
         <div class="mt-6">
             <div id="timeline" class="tab-content">
                 <h3 class="text-xl font-bold mb-2">Timeline</h3>
-                {% if profile.timelinedate %}
-                    <p class="text-gray-700">{{ profile.timelinedate.strftime('%b %d, %Y') }} - {{ profile.timelinetext }}</p>
+                {% if timeline_events %}
+                    <ul>
+                        {% for event in timeline_events %}
+                            <li>
+                                <strong>{{ event.event_date.strftime('%b %d, %Y') }}</strong>: {{ event.event_text }}
+                            </li>
+                        {% endfor %}
+                    </ul>
                 {% else %}
                     <div class="flex flex-col items-center justify-center mt-10">
                         <svg class="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
