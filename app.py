@@ -8,20 +8,15 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 import qrcode
 from datetime import datetime
-from forms import DeleteProfileForm, ProfileForm, EditProfileForm, EditTimelineForm
 import os
 import base64
 import logging
 import io
-from forms import DeleteProfileForm, ProfileForm, EditProfileForm, EditTimelineForm
-from flask_wtf.file import FileField, FileAllowed, FileRequired
-from forms import RegistrationForm, LoginForm, TimelineForm, SettingsForm, DeleteProfileForm
-from models import User, Profile, TimelineEvent
-from extensions import db
-from flask_wtf.csrf import CSRFProtect
 
-# Initialize CSRF protection
-csrf = CSRFProtect(app)
+from extensions import db
+from forms import DeleteProfileForm, ProfileForm, EditProfileForm, EditTimelineForm, RegistrationForm, LoginForm, TimelineForm, SettingsForm
+from models import User, Profile, TimelineEvent
+from flask_wtf.csrf import CSRFProtect
 
 # Flask app configuration
 app = Flask(__name__)
@@ -31,6 +26,7 @@ app.config['UPLOAD_FOLDER'] = 'static/uploads'
 
 # Initialize extensions
 db.init_app(app)
+csrf = CSRFProtect(app)  # Initialize CSRF protection after app is created
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 
@@ -158,7 +154,6 @@ def view_profile(profile_id):
     else:
         return render_template('view_profile_public.html', profile=profile)
 
-
 @app.route('/edit_profile/<int:profile_id>', methods=['GET', 'POST'])
 @login_required
 def edit_profile(profile_id):
@@ -241,7 +236,6 @@ def delete_profile(profile_id):
         flash(f'An error occurred: {str(e)}', 'danger')
     
     return redirect(url_for('dashboard'))
-
 
 @app.route('/api/profiles')
 @login_required
@@ -346,7 +340,7 @@ def disclaimer():
 def imortis():
     return render_template('imortis.html')
 
-
+# Run the app
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()  # Create database tables for our data models
