@@ -17,6 +17,10 @@ from forms import DeleteProfileForm, ProfileForm, EditProfileForm, EditTimelineF
 from flask_wtf.file import FileField, FileAllowed, FileRequired
 from forms import RegistrationForm, LoginForm, TimelineForm, SettingsForm, DeleteProfileForm
 from models import User, Profile, TimelineEvent
+from extensions import db
+from models import User, Profile, TimelineEvent
+
+
 
 
 
@@ -29,7 +33,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 
 # Initialize extensions
-db = SQLAlchemy(app)
+db.init_app(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 
@@ -346,10 +350,7 @@ def imortis():
     return render_template('imortis.html')
 
 
-# Run the app
 if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()  # Create database tables for our data models
     app.run(host='0.0.0.0', port=5000)
-    
-# Create database tables
-with app.app_context():
-    db.create_all()
