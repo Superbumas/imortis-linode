@@ -80,14 +80,14 @@
           <div class="mb-4">
             <label for="date_of_birth" class="block text-sm font-medium leading-6 text-gray-900">Date of Birth</label>
             <div class="mt-2">
-              {{ form.date_of_birth(class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6", type="date") }}
+              {{ form.date_of_birth(class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6", type="text", placeholder="dd/mm/yyyy") }}
             </div>
           </div>
 
           <div class="mb-4">
             <label for="date_of_death" class="block text-sm font-medium leading-6 text-gray-900">Date of Death</label>
             <div class="mt-2">
-              {{ form.date_of_death(class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6", type="date") }}
+              {{ form.date_of_death(class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6", type="text", placeholder="dd/mm/yyyy") }}
             </div>
           </div>
 
@@ -104,6 +104,23 @@
               {{ form.city(class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6") }}
             </div>
           </div>
+
+          <div class="mb-4">
+            <label for="timeline_events" class="block text-sm font-medium leading-6 text-gray-900">Timeline Events</label>
+            <div class="mt-2" id="timeline-events-container">
+              {% for event_form in form.timeline_events %}
+                <div class="mb-4 timeline-event">
+                  {{ event_form.hidden_tag() }} <!-- Ensure CSRF token is included in each nested form -->
+                  <label for="event_date" class="block text-sm font-medium leading-6 text-gray-900">Event Date</label>
+                  {{ event_form.event_date(class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6", type="text", placeholder="dd/mm/yyyy") }}
+                  <label for="event_text" class="block text-sm font-medium leading-6 text-gray-900">Event Text</label>
+                  {{ event_form.event_text(class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6") }}
+                  <button type="button" class="remove-event-button text-red-500">Remove</button>
+                </div>
+              {% endfor %}
+            </div>
+            <button type="button" id="add-event-button" class="text-blue-500">Add Event</button>
+          </div>
         </div>
       </div>
     </div>
@@ -114,4 +131,40 @@
     </div>
   </form>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const addEventButton = document.getElementById('add-event-button');
+        const timelineEventsContainer = document.getElementById('timeline-events-container');
+
+        addEventButton.addEventListener('click', function() {
+            const newEvent = document.createElement('div');
+            newEvent.classList.add('mb-4', 'timeline-event');
+            const index = timelineEventsContainer.children.length;
+            newEvent.innerHTML = `
+                <label for="event_date" class="block text-sm font-medium leading-6 text-gray-900">Event Date</label>
+                <input type="text" name="timeline_events-${index}-event_date" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="dd/mm/yyyy">
+                <label for="event_text" class="block text-sm font-medium leading-6 text-gray-900">Event Text</label>
+                <input type="text" name="timeline_events-${index}-event_text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                <button type="button" class="remove-event-button text-red-500">Remove</button>
+            `;
+            timelineEventsContainer.appendChild(newEvent);
+            updateRemoveEventButtons();
+        });
+
+        function updateRemoveEventButtons() {
+            const removeEventButtons = document.querySelectorAll('.remove-event-button');
+            removeEventButtons.forEach(button => {
+                button.removeEventListener('click', removeEvent);
+                button.addEventListener('click', removeEvent);
+            });
+        }
+
+        function removeEvent(event) {
+            event.target.closest('.timeline-event').remove();
+        }
+
+        updateRemoveEventButtons();
+    });
+</script>
 {% endblock %}
