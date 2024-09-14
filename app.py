@@ -21,6 +21,7 @@ from models import User, Profile, TimelineEvent
 
 
 
+
 # Flask app configuration
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'ThisIsASecretKey'

@@ -8,6 +8,8 @@ from models import User
 from wtforms import ValidationError
 from wtforms import StringField, TextAreaField, DateField, FileField, SubmitField, FieldList, FormField, PasswordField, Email
 from wtforms.validators import DataRequired, Length, EqualTo, Email
+from flask_wtf import FlaskForm
+
 
 
 
