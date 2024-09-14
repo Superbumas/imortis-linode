@@ -166,6 +166,9 @@ def edit_profile(profile_id):
 
     form = EditProfileForm(obj=profile)
     
+    # Clear the form's timeline_events field before appending new entries
+    form.timeline_events.entries.clear()
+    
     # Populate timeline_events with existing events or at least one empty entry
     if request.method == 'GET':
         for event in profile.timeline_events:
