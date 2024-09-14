@@ -106,10 +106,15 @@
 
           <div class="mb-4">
             <label for="timeline_events" class="block text-sm font-medium leading-6 text-gray-900">Timeline Events</label>
-            <div class="mt-2">
-              {{ form.timeline_events(class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6") }}
+            <div id="timeline-events-container" class="space-y-4">
+              <!-- Timeline events will be dynamically added here -->
             </div>
-            <button type="button" id="add-event-button" class="text-blue-500">Add Event</button>
+            <div class="mt-4">
+              <input type="date" id="new-event-date" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Event Date">
+              <input type="text" id="new-event-text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 mt-2" placeholder="Event Text">
+              <button type="button" id="add-event-button" class="mt-2 text-blue-500">Add Event</button>
+            </div>
+            {{ form.timeline_events(class="hidden") }}
           </div>
         </div>
       </div>
@@ -125,16 +130,20 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const addEventButton = document.getElementById('add-event-button');
+        const newEventDate = document.getElementById('new-event-date');
+        const newEventText = document.getElementById('new-event-text');
         const timelineEventsField = document.getElementById('timeline_events');
         let timelineEvents = JSON.parse(timelineEventsField.value || '[]');
 
         addEventButton.addEventListener('click', function() {
-            const eventDate = prompt("Enter event date (YYYY-MM-DD):");
-            const eventText = prompt("Enter event text:");
+            const eventDate = newEventDate.value;
+            const eventText = newEventText.value;
             if (eventDate && eventText) {
                 timelineEvents.push({ event_date: eventDate, event_text: eventText });
                 timelineEventsField.value = JSON.stringify(timelineEvents);
                 displayTimelineEvents();
+                newEventDate.value = '';
+                newEventText.value = '';
             }
         });
 
