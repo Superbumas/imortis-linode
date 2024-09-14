@@ -18,13 +18,10 @@ from flask_wtf.file import FileField, FileAllowed, FileRequired
 from forms import RegistrationForm, LoginForm, TimelineForm, SettingsForm, DeleteProfileForm
 from models import User, Profile, TimelineEvent
 from extensions import db
-from models import User, Profile, TimelineEvent
+from flask_wtf.csrf import CSRFProtect
 
-
-
-
-
-
+# Initialize CSRF protection
+csrf = CSRFProtect(app)
 
 # Flask app configuration
 app = Flask(__name__)
