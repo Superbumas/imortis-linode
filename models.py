@@ -22,7 +22,7 @@ class Profile(db.Model):
     date_of_death = db.Column(db.Date, nullable=True)
     country = db.Column(db.String(50), nullable=False)
     city = db.Column(db.String(50), nullable=False)
-    timeline_events = db.relationship('TimelineEvent', backref='profile', lazy=True, cascade="all, delete-orphan")
+    timeline_events = db.Column(JSON, nullable=True)  # JSON field for timeline events
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)

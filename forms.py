@@ -18,6 +18,7 @@ COUNTRIES = [
 class TimelineEventForm(FlaskForm):
     event_date = DateField('Event Date', format='%Y-%m-%d', validators=[DataRequired()])
     event_text = StringField('Event Text', validators=[DataRequired()])
+    
 class CreateProfileForm(FlaskForm):
     first_name = StringField('First Name', validators=[DataRequired(), Length(max=50)])
     last_name = StringField('Last Name', validators=[DataRequired(), Length(max=50)])
@@ -28,7 +29,7 @@ class CreateProfileForm(FlaskForm):
     city = StringField('City', validators=[DataRequired(), Length(max=50)])
     profile_picture = FileField('Profile Picture', validators=[FileAllowed(['jpg', 'png', 'jpeg'])])
     cover_photo = FileField('Cover Photo', validators=[FileAllowed(['jpg', 'png', 'jpeg'])])
-    timeline_events = FieldList(FormField(TimelineEventForm), min_entries=0)
+    timeline_events = TextAreaField('Timeline Events')  # JSON field for timeline events
     submit = SubmitField('Save')
 
 
@@ -42,7 +43,7 @@ class EditProfileForm(FlaskForm):
     city = StringField('City', validators=[DataRequired(), Length(max=50)])
     profile_picture = FileField('Profile Picture', validators=[FileAllowed(['jpg', 'png', 'jpeg'])])
     cover_photo = FileField('Cover Photo', validators=[FileAllowed(['jpg', 'png', 'jpeg'])])
-    timeline_events = FieldList(FormField(TimelineEventForm), min_entries=0)
+    timeline_events = TextAreaField('Timeline Events')  # JSON field for timeline events
     submit = SubmitField('Save')
 
 class EditTimelineForm(FlaskForm):

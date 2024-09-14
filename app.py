@@ -1,21 +1,17 @@
-from flask import Flask, render_template, redirect, url_for, flash, jsonify, request, session, abort
+from flask import Flask, render_template, redirect, url_for, flash, request, session, abort
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField, SubmitField, PasswordField, DateField, FileField, FieldList, FormField
+from wtforms import StringField, TextAreaField, SubmitField, PasswordField, DateField, FileField
 from wtforms.validators import DataRequired, Length, ValidationError, EqualTo, Email
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
-import qrcode
-from datetime import datetime
 import os
-import base64
-import logging
-import io
+import json
 
 from extensions import db
 from forms import DeleteProfileForm, EditProfileForm, EditTimelineForm, RegistrationForm, LoginForm, TimelineForm, SettingsForm, CreateProfileForm, TimelineEventForm
-from models import User, Profile, TimelineEvent
+from models import User, Profile
 from flask_wtf.csrf import CSRFProtect
 
 
@@ -115,7 +111,8 @@ def create_profile():
                 date_of_death=form.date_of_death.data,
                 country=form.country.data,
                 city=form.city.data,
-                user_id=current_user.id
+                user_id=current_user.id,
+                timeline_events=json.loads(form.timeline_events.data) if form.timeline_events.data else []
             )
 
             if form.profile_picture.data:
@@ -133,18 +130,6 @@ def create_profile():
                 profile.cover_photo = filename
 
             db.session.add(profile)
-            db.session.commit()
-
-            # Add timeline events
-            for event_form in form.timeline_events.entries:
-                if event_form.event_date.data and event_form.event_text.data:
-                    event = TimelineEvent(
-                        event_date=event_form.event_date.data,
-                        event_text=event_form.event_text.data,
-                        profile_id=profile.id
-                    )
-                    db.session.add(event)
-
             db.session.commit()
             flash('Profile created successfully!', 'success')
             return redirect(url_for('dashboard'))
