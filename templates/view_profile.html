@@ -42,16 +42,15 @@
                     <ul class="list-none m-0 p-0">
                         {% for event in timeline_events %}
                             <li class="mb-8">
-                                <div class="flex items-center">
-                                    <div class="w-1/12 text-gray-400">{{ event.event_date }}</div>
-                                    <div class="w-11/12 pl-4">
-                                        <h4 class="font-bold text-lg md:text-2xl">{{ event.event_text }}</h4>
-                                        <p class="text-sm md:text-base leading-snug text-gray-500 text-opacity-100">More details about the event can go here.</p>
+                                <div class="bg-white p-6 rounded-lg shadow-md">
+                                    <div class="flex justify-between items-center">
+                                        <div class="text-gray-500">{{ event.event_date }}</div>
+                                        <div class="text-right">
+                                            <h4 class="font-bold text-lg text-gray-900">{{ event.event_text }}</h4>
+                                            <button class="text-orange-500 hover:text-orange-700 mt-2">More details</button>
+                                        </div>
                                     </div>
                                 </div>
-                                {% if not loop.last %}
-                                    <hr class="my-4 border-gray-300">
-                                {% endif %}
                             </li>
                         {% endfor %}
                     </ul>
