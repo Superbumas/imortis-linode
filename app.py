@@ -14,7 +14,7 @@ import logging
 import io
 
 from extensions import db
-from forms import DeleteProfileForm, ProfileForm, EditProfileForm, EditTimelineForm, RegistrationForm, LoginForm, TimelineForm, SettingsForm, CreateProfileForm, TimelineEventForm
+from forms import DeleteProfileForm, EditProfileForm, EditTimelineForm, RegistrationForm, LoginForm, TimelineForm, SettingsForm, CreateProfileForm, TimelineEventForm
 from models import User, Profile, TimelineEvent
 from flask_wtf.csrf import CSRFProtect
 

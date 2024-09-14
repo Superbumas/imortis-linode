@@ -18,7 +18,6 @@ COUNTRIES = [
 class TimelineEventForm(FlaskForm):
     event_date = DateField('Event Date', format='%Y-%m-%d', validators=[DataRequired()])
     event_text = StringField('Event Text', validators=[DataRequired()])
-
 class CreateProfileForm(FlaskForm):
     first_name = StringField('First Name', validators=[DataRequired(), Length(max=50)])
     last_name = StringField('Last Name', validators=[DataRequired(), Length(max=50)])
@@ -31,6 +30,7 @@ class CreateProfileForm(FlaskForm):
     cover_photo = FileField('Cover Photo', validators=[FileAllowed(['jpg', 'png', 'jpeg'])])
     timeline_events = FieldList(FormField(TimelineEventForm), min_entries=0)
     submit = SubmitField('Save')
+
 
 class EditProfileForm(FlaskForm):
     first_name = StringField('First Name', validators=[DataRequired(), Length(max=50)])
