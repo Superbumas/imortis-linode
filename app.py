@@ -222,30 +222,28 @@ def delete_profile(profile_id):
     
     return redirect(url_for('dashboard'))
 
-@app.route('/api/profiles')
+@app.route('/api/profile/<int:profile_id>/timeline')
 @login_required
-def api_profiles():
+def api_profile_timeline(profile_id):
     try:
-        profiles = Profile.query.filter_by(user_id=current_user.id).all()
-        profiles_data = [
-               {
-                   "id": profile.id,
-                   "name": profile.name,
-                   "bio": profile.bio,
-                   "date_of_birth": profile.date_of_birth.strftime('%Y-%m-%d'),
-                   "date_of_death": profile.date_of_death.strftime('%Y-%m-%d'),
-                   "timelines": [
-                       {
-                           "date": timeline.date.strftime('%Y-%m-%d'),
-                           "event": timeline.event
-                       } for timeline in profile.timelines
-                   ]
-               } for profile in profiles
+        profile = Profile.query.get_or_404(profile_id)
+        if profile.user_id != current_user.id:
+            return jsonify({"error": "Unauthorized"}), 403
+
+        timeline_events = [
+            {
+                "date": timeline.date.strftime('%Y-%m-%d'),
+                "event": timeline.event
+            } for timeline in profile.timelines
         ]
-        return jsonify(profiles_data)
+        return jsonify(timeline_events)
     except Exception as e:
-        app.logger.error(f"Error fetching profiles: {e}")
+        app.logger.error(f"Error fetching timeline: {e}")
         return jsonify({"error": "Internal Server Error"}), 500
+
+@app.route('/components/<path:filename>')
+def serve_component(filename):
+    return send_from_directory(os.path.join(app.root_path, 'components'), filename)
 
 @app.route('/settings', methods=['GET', 'POST'])
 @login_required
