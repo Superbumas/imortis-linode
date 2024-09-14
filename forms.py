@@ -1,7 +1,7 @@
-from flask_wtf.file import FileAllowed 
-from wtforms import StringField, TextAreaField, DateField, FileField, SubmitField, FieldList, FormField, PasswordField, ValidationError
-from wtforms.validators import DataRequired, Length, EqualTo, Email
 from flask_wtf import FlaskForm
+from wtforms import StringField, TextAreaField, SubmitField, DateField, FieldList, FormField, FileField
+from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
+from flask_wtf.file import FileAllowed
 
 
 
@@ -35,8 +35,8 @@ class EditProfileForm(FlaskForm):
     first_name = StringField('First Name', validators=[DataRequired(), Length(max=50)])
     last_name = StringField('Last Name', validators=[DataRequired(), Length(max=50)])
     bio = TextAreaField('Bio', validators=[Length(max=500)])
-    date_of_birth = DateField('Date of Birth', format='%Y-%m-%d', validators=[DataRequired()])
-    date_of_death = DateField('Date of Death', format='%Y-%m-%d', validators=[DataRequired()])
+    date_of_birth = DateField('Date of Birth', format='%d-%m-%Y', validators=[DataRequired()])
+    date_of_death = DateField('Date of Death', format='%d-%m-%Y', validators=[DataRequired()])
     country = StringField('Country', validators=[DataRequired(), Length(max=50)])
     city = StringField('City', validators=[DataRequired(), Length(max=50)])
     profile_picture = FileField('Profile Picture', validators=[FileAllowed(['jpg', 'png', 'jpeg'])])

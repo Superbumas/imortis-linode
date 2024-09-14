@@ -102,6 +102,7 @@ def dashboard():
 @login_required
 def create_profile():
     form = ProfileForm()
+    
     if form.validate_on_submit():
         try:
             profile = Profile(
@@ -109,11 +110,12 @@ def create_profile():
                 last_name=form.last_name.data,
                 bio=form.bio.data,
                 date_of_birth=form.date_of_birth.data,
-                date_of_death=form.date_of_death.data if form.date_of_death.data else None,
+                date_of_death=form.date_of_death.data,
                 country=form.country.data,
                 city=form.city.data,
                 user_id=current_user.id
             )
+
             if form.profile_picture.data:
                 filename = secure_filename(form.profile_picture.data.filename)
                 upload_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
@@ -130,11 +132,24 @@ def create_profile():
 
             db.session.add(profile)
             db.session.commit()
+
+            # Add timeline events
+            for event_form in form.timeline_events.entries:
+                if event_form.event_date.data and event_form.event_text.data:
+                    event = TimelineEvent(
+                        event_date=event_form.event_date.data,
+                        event_text=event_form.event_text.data,
+                        profile_id=profile.id
+                    )
+                    db.session.add(event)
+
+            db.session.commit()
             flash('Profile created successfully!', 'success')
             return redirect(url_for('dashboard'))
         except Exception as e:
             db.session.rollback()
             flash(f'An error occurred: {str(e)}', 'danger')
+
     return render_template('create_profile.html', form=form)
 
 @app.route('/profile/<int:profile_id>', methods=['GET'])
