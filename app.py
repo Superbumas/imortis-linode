@@ -156,22 +156,10 @@ def view_profile(profile_id):
 def edit_profile(profile_id):
     profile = Profile.query.get_or_404(profile_id)
     if profile.user_id != current_user.id:
-        flash('You do not have permission to edit this profile.', 'danger')
-        return redirect(url_for('dashboard'))
-
+        abort(403)
+    
     form = EditProfileForm(obj=profile)
     
-    # Clear the form's timeline_events field before appending new entries
-    form.timeline_events.entries.clear()
-    
-    # Populate timeline_events with existing events
-    if request.method == 'GET':
-        for event in profile.timeline_events:
-            form.timeline_events.append_entry({
-                'event_date': event.event_date,
-                'event_text': event.event_text
-            })
-
     if form.validate_on_submit():
         try:
             profile.first_name = form.first_name.data
@@ -181,6 +169,7 @@ def edit_profile(profile_id):
             profile.date_of_death = form.date_of_death.data
             profile.country = form.country.data
             profile.city = form.city.data
+            profile.timeline_events = json.loads(form.timeline_events.data) if form.timeline_events.data else []
 
             if form.profile_picture.data:
                 filename = secure_filename(form.profile_picture.data.filename)
@@ -196,25 +185,15 @@ def edit_profile(profile_id):
                 form.cover_photo.data.save(upload_path)
                 profile.cover_photo = filename
 
-            # Clear existing timeline events
-            TimelineEvent.query.filter_by(profile_id=profile.id).delete()
-
-            # Add new timeline events
-            for event_form in form.timeline_events.entries:
-                if event_form.event_date.data and event_form.event_text.data:
-                    event = TimelineEvent(
-                        event_date=event_form.event_date.data,
-                        event_text=event_form.event_text.data,
-                        profile_id=profile.id
-                    )
-                    db.session.add(event)
-
             db.session.commit()
             flash('Profile updated successfully!', 'success')
-            return redirect(url_for('dashboard'))
+            return redirect(url_for('view_profile', profile_id=profile.id))
         except Exception as e:
             db.session.rollback()
             flash(f'An error occurred: {str(e)}', 'danger')
+
+    # Pre-fill the timeline events field with JSON data
+    form.timeline_events.data = json.dumps(profile.timeline_events)
 
     return render_template('edit_profile.html', form=form, profile=profile)
 

@@ -51,50 +51,24 @@
           <div class="mb-4">
             <label for="profile_picture" class="block text-sm font-medium leading-6 text-gray-900">Profile Picture</label>
             <div class="mt-2 flex items-center gap-x-3">
-              {% if profile.profile_picture %}
-                <img src="{{ url_for('static', filename='uploads/' ~ profile.profile_picture) }}" alt="{{ profile.first_name }} {{ profile.last_name }}" class="w-12 h-12 rounded-full">
-              {% else %}
-                <svg class="h-12 w-12 text-gray-300" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                </svg>
-              {% endif %}
-              {{ form.profile_picture(class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6") }}
+              <svg class="h-12 w-12 text-gray-300" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M18.685 19.097A9.723 9.723 0 0021.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 003.065 7.097A9.716 9.716 0 0012 21.75a9.716 9.716 0 006.685-2.653zm-12.54-1.285A7.486 7.486 0 0112 15a7.486 7.486 0 015.855 2.812A8.224 8.224 0 0112 20.25a8.224 8.224 0 01-5.855-2.438zM15.75 9a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" clip-rule="evenodd" />
+              </svg>
+              {{ form.profile_picture(class="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50") }}
             </div>
           </div>
 
           <div class="mb-4">
             <label for="cover_photo" class="block text-sm font-medium leading-6 text-gray-900">Cover Photo</label>
-            <div class="mt-2 flex items-center gap-x-3">
-              {% if profile.cover_photo %}
-                <img src="{{ url_for('static', filename='uploads/' ~ profile.cover_photo) }}" alt="{{ profile.first_name }} {{ profile.last_name }}" class="w-12 h-12 rounded-full">
-              {% else %}
-                <svg class="h-12 w-12 text-gray-300" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+            <div class="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
+              <div class="text-center">
+                <svg class="mx-auto h-12 w-12 text-gray-300" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path fill-rule="evenodd" d="M1.5 6a2.25 2.25 0 012.25-2.25h16.5A2.25 2.25 0 0122.5 6v12a2.25 2.25 0 01-2.25 2.25H3.75A2.25 2.25 0 011.5 18V6zM3 16.06V18c0 .414.336.75.75.75h16.5A.75.75 0 0021 18v-1.94l-2.69-2.689a1.5 1.5 0 00-2.12 0l-.88.879.97.97a.75.75 0 11-1.06 1.06l-5.16-5.159...(line too long; chars omitted)
                 </svg>
-              {% endif %}
-              {{ form.cover_photo(class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6") }}
-            </div>
-          </div>
-
-          <div class="mb-4">
-            <label for="date_of_birth" class="block text-sm font-medium leading-6 text-gray-900">Date of Birth</label>
-            <div class="mt-2">
-              {{ form.date_of_birth(class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6", type="text", placeholder="dd/mm/yyyy") }}
-            </div>
-          </div>
-
-          <div class="mb-4">
-            <label for="date_of_death" class="block text-sm font-medium leading-6 text-gray-900">Date of Death</label>
-            <div class="mt-2">
-              {{ form.date_of_death(class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6", type="text", placeholder="dd/mm/yyyy") }}
-            </div>
-          </div>
-
-          <div class="mb-4">
-            <label for="country" class="block text-sm font-medium leading-6 text-gray-900">Country</label>
-            <div class="mt-2">
-              {{ form.country(class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6") }}
-            </div>
+                <div class="mt-4 flex text-sm leading-6 text-gray-600">
+                  <label for="cover_photo" class="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">
+                    <span>Upload a file</span>
+...(about 26 lines omitted)...
           </div>
 
           <div class="mb-4">
@@ -106,17 +80,8 @@
 
           <div class="mb-4">
             <label for="timeline_events" class="block text-sm font-medium leading-6 text-gray-900">Timeline Events</label>
-            <div class="mt-2" id="timeline-events-container">
-              {% for event_form in form.timeline_events %}
-                <div class="mb-4 timeline-event">
-                  {{ event_form.hidden_tag() }} <!-- Ensure CSRF token is included in each nested form -->
-                  <label for="event_date" class="block text-sm font-medium leading-6 text-gray-900">Event Date</label>
-                  {{ event_form.event_date(class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6", type="text", placeholder="dd/mm/yyyy") }}
-                  <label for="event_text" class="block text-sm font-medium leading-6 text-gray-900">Event Text</label>
-                  {{ event_form.event_text(class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6") }}
-                  <button type="button" class="remove-event-button text-red-500">Remove</button>
-                </div>
-              {% endfor %}
+            <div class="mt-2">
+              {{ form.timeline_events(class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6") }}
             </div>
             <button type="button" id="add-event-button" class="text-blue-500">Add Event</button>
           </div>
@@ -134,36 +99,45 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const addEventButton = document.getElementById('add-event-button');
-        const timelineEventsContainer = document.getElementById('timeline-events-container');
+        const timelineEventsField = document.getElementById('timeline_events');
+        let timelineEvents = JSON.parse(timelineEventsField.value || '[]');
 
         addEventButton.addEventListener('click', function() {
-            const newEvent = document.createElement('div');
-            newEvent.classList.add('mb-4', 'timeline-event');
-            const index = timelineEventsContainer.children.length;
-            newEvent.innerHTML = `
-                <label for="event_date" class="block text-sm font-medium leading-6 text-gray-900">Event Date</label>
-                <input type="text" name="timeline_events-${index}-event_date" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="dd/mm/yyyy">
-                <label for="event_text" class="block text-sm font-medium leading-6 text-gray-900">Event Text</label>
-                <input type="text" name="timeline_events-${index}-event_text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                <button type="button" class="remove-event-button text-red-500">Remove</button>
-            `;
-            timelineEventsContainer.appendChild(newEvent);
-            updateRemoveEventButtons();
+            const eventDate = prompt("Enter event date (YYYY-MM-DD):");
+            const eventText = prompt("Enter event text:");
+            if (eventDate && eventText) {
+                timelineEvents.push({ event_date: eventDate, event_text: eventText });
+                timelineEventsField.value = JSON.stringify(timelineEvents);
+                displayTimelineEvents();
+            }
         });
 
-        function updateRemoveEventButtons() {
+        function displayTimelineEvents() {
+            const container = document.getElementById('timeline-events-container');
+            container.innerHTML = '';
+            timelineEvents.forEach((event, index) => {
+                const eventDiv = document.createElement('div');
+                eventDiv.classList.add('mb-4', 'timeline-event');
+                eventDiv.innerHTML = `
+                    <p><strong>Date:</strong> ${event.event_date}</p>
+                    <p><strong>Text:</strong> ${event.event_text}</p>
+                    <button type="button" class="remove-event-button text-red-500" data-index="${index}">Remove</button>
+                `;
+                container.appendChild(eventDiv);
+            });
+
             const removeEventButtons = document.querySelectorAll('.remove-event-button');
             removeEventButtons.forEach(button => {
-                button.removeEventListener('click', removeEvent);
-                button.addEventListener('click', removeEvent);
+                button.addEventListener('click', function() {
+                    const index = this.getAttribute('data-index');
+                    timelineEvents.splice(index, 1);
+                    timelineEventsField.value = JSON.stringify(timelineEvents);
+                    displayTimelineEvents();
+                });
             });
         }
 
-        function removeEvent(event) {
-            event.target.closest('.timeline-event').remove();
-        }
-
-        updateRemoveEventButtons();
+        displayTimelineEvents();
     });
 </script>
 {% endblock %}
