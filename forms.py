@@ -71,10 +71,6 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Login')
 
-class TimelineForm(FlaskForm):
-    date = DateField('Date', format='%Y-%m-%d', validators=[DataRequired()])
-    event = StringField('Event', validators=[DataRequired(), Length(max=255)])
-
 class SettingsForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     current_password = PasswordField('Current Password', validators=[DataRequired()])
