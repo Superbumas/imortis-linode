@@ -243,6 +243,8 @@ def api_profile_timeline(profile_id):
 
 @app.route('/components/<path:filename>')
 def serve_component(filename):
+    if filename.endswith('.js'):
+        return send_from_directory(os.path.join(app.root_path, 'static/components'), filename, mimetype='application/javascript')
     return send_from_directory(os.path.join(app.root_path, 'static/components'), filename)
 
 @app.route('/settings', methods=['GET', 'POST'])
