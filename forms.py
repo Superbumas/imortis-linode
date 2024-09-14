@@ -2,6 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, TextAreaField, SubmitField, DateField, FieldList, FormField, FileField, PasswordField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from flask_wtf.file import FileField, FileAllowed
+import json
 
 
 
@@ -18,7 +19,7 @@ COUNTRIES = [
 class TimelineEventForm(FlaskForm):
     event_date = DateField('Event Date', format='%Y-%m-%d', validators=[DataRequired()])
     event_text = StringField('Event Text', validators=[DataRequired()])
-    
+
 class CreateProfileForm(FlaskForm):
     first_name = StringField('First Name', validators=[DataRequired(), Length(max=50)])
     last_name = StringField('Last Name', validators=[DataRequired(), Length(max=50)])
