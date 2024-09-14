@@ -171,6 +171,8 @@ def edit_profile(profile_id):
             profile.city = form.city.data
             profile.timeline_events = json.loads(form.timeline_events.data) if form.timeline_events.data else []
 
+            print("Timeline Events:", profile.timeline_events)  # Debugging statement
+
             if form.profile_picture.data:
                 filename = secure_filename(form.profile_picture.data.filename)
                 upload_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
