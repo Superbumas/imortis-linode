@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, flash, request, session, abort, jsonify, send_from_directory
+from flask import Flask, render_template, redirect, url_for, flash, request, session, abort, jsonify, send_from_directory, Response
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask_wtf import FlaskForm
@@ -243,7 +243,10 @@ def api_profile_timeline(profile_id):
 
 @app.route('/components/<path:filename>')
 def serve_component(filename):
-    return send_from_directory(os.path.join(app.root_path, 'static/components'), filename)
+    file_path = os.path.join(app.root_path, 'static/components', filename)
+    with open(file_path, 'r') as f:
+        content = f.read()
+    return Response(content, mimetype='application/javascript')
 
 @app.route('/settings', methods=['GET', 'POST'])
 @login_required
