@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="w-full max-w-md mx-auto bg-white p-8 rounded-lg shadow-lg">
-  <form method="POST" enctype="multipart/form-data">
+  <form method="POST" enctype="multipart/form-data" id="edit-profile-form">
     {{ form.hidden_tag() }}
     
     {% if form.errors %}
@@ -133,6 +133,7 @@
         const newEventDate = document.getElementById('new-event-date');
         const newEventText = document.getElementById('new-event-text');
         const timelineEventsField = document.getElementById('timeline_events');
+        const form = document.getElementById('edit-profile-form');
         let timelineEvents = JSON.parse(timelineEventsField.value || '[]');
 
         addEventButton.addEventListener('click', function() {
@@ -145,6 +146,10 @@
                 newEventDate.value = '';
                 newEventText.value = '';
             }
+        });
+
+        form.addEventListener('submit', function() {
+            timelineEventsField.value = JSON.stringify(timelineEvents);
         });
 
         function displayTimelineEvents() {
