@@ -104,34 +104,30 @@ def create_profile():
     form = ProfileForm()
     if form.validate_on_submit():
         try:
-            profile_picture = None
+            profile = Profile(
+                first_name=form.first_name.data,
+                last_name=form.last_name.data,
+                bio=form.bio.data,
+                date_of_birth=form.date_of_birth.data,
+                date_of_death=form.date_of_death.data if form.date_of_death.data else None,
+                country=form.country.data,
+                city=form.city.data,
+                user_id=current_user.id
+            )
             if form.profile_picture.data:
                 filename = secure_filename(form.profile_picture.data.filename)
                 upload_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
                 os.makedirs(os.path.dirname(upload_path), exist_ok=True)
                 form.profile_picture.data.save(upload_path)
-                profile_picture = filename
+                profile.profile_picture = filename
 
-            cover_photo = None
             if form.cover_photo.data:
                 filename = secure_filename(form.cover_photo.data.filename)
                 upload_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
                 os.makedirs(os.path.dirname(upload_path), exist_ok=True)
                 form.cover_photo.data.save(upload_path)
-                cover_photo = filename
+                profile.cover_photo = filename
 
-            profile = Profile(
-                first_name=form.first_name.data,
-                last_name=form.last_name.data,
-                bio=form.bio.data,
-                profile_picture=profile_picture,
-                cover_photo=cover_photo,
-                date_of_birth=form.date_of_birth.data,
-                date_of_death=form.date_of_death.data if form.date_of_death.data else None,
-                country=form.country.data,
-                city=form.city.data,
-                user_id=current_user.id,
-            )
             db.session.add(profile)
             db.session.commit()
             flash('Profile created successfully!', 'success')
