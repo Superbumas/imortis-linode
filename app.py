@@ -18,6 +18,7 @@ from forms import DeleteProfileForm, ProfileForm, EditProfileForm, EditTimelineF
 from models import User, Profile, TimelineEvent
 from flask_wtf.csrf import CSRFProtect
 
+
 # Flask app configuration
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'ThisIsASecretKey'
