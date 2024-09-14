@@ -1,5 +1,4 @@
-from flask_wtf.file import FileAllowed
-from models import User 
+from flask_wtf.file import FileAllowed 
 from wtforms import ValidationError
 from wtforms import StringField, TextAreaField, DateField, FileField, SubmitField, FieldList, FormField, PasswordField, Email
 from wtforms.validators import DataRequired, Length, EqualTo, Email
