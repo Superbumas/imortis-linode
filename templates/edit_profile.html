@@ -55,7 +55,25 @@
                 <img src="{{ url_for('static', filename='uploads/' ~ profile.profile_picture) }}" alt="{{ profile.first_name }} {{ profile.last_name }}" class="w-12 h-12 rounded-full">
               {% else %}
                 <svg class="h-12 w-12 text-gray-300" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-...(about 26 lines omitted)...
+                  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
+              {% endif %}
+              {{ form.profile_picture(class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6") }}
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <label for="cover_photo" class="block text-sm font-medium leading-6 text-gray-900">Cover Photo</label>
+            <div class="mt-2 flex items-center gap-x-3">
+              {% if profile.cover_photo %}
+                <img src="{{ url_for('static', filename='uploads/' ~ profile.cover_photo) }}" alt="{{ profile.first_name }} {{ profile.last_name }}" class="w-12 h-12 rounded-full">
+              {% else %}
+                <svg class="h-12 w-12 text-gray-300" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
+              {% endif %}
+              {{ form.cover_photo(class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6") }}
+            </div>
           </div>
 
           <div class="mb-4">
