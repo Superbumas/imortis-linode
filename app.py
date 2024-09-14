@@ -174,14 +174,16 @@ def edit_profile(profile_id):
             profile.city = form.city.data
             profile.timeline_events = json.loads(form.timeline_events.data) if form.timeline_events.data else []
 
-            if form.profile_picture.data:
+            # Handle profile picture upload
+            if form.profile_picture.data and hasattr(form.profile_picture.data, 'filename'):
                 filename = secure_filename(form.profile_picture.data.filename)
                 upload_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
                 os.makedirs(os.path.dirname(upload_path), exist_ok=True)
                 form.profile_picture.data.save(upload_path)
                 profile.profile_picture = filename
 
-            if form.cover_photo.data:
+            # Handle cover photo upload
+            if form.cover_photo.data and hasattr(form.cover_photo.data, 'filename'):
                 filename = secure_filename(form.cover_photo.data.filename)
                 upload_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
                 os.makedirs(os.path.dirname(upload_path), exist_ok=True)
