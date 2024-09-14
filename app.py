@@ -140,19 +140,16 @@ def create_profile():
     return render_template('create_profile.html', form=form)
 
 @app.route('/profile/<int:profile_id>', methods=['GET'])
+@login_required
 def view_profile(profile_id):
-    profile = db.session.get(Profile, profile_id)
-    if profile is None:
-        flash('Profile not found.', 'danger')
-        return redirect(url_for('dashboard'))
+    profile = Profile.query.get_or_404(profile_id)
+    if profile.user_id != current_user.id:
+        abort(403)
     
-    timeline_events = TimelineEvent.query.filter_by(profile_id=profile_id).all()
-    
-    if current_user.is_authenticated:
-        delete_form = DeleteProfileForm()
-        return render_template('view_profile.html', profile=profile, timeline_events=timeline_events, form=delete_form)
-    else:
-        return render_template('view_profile_public.html', profile=profile, timeline_events=timeline_events)
+    # Access timeline events directly from the profile
+    timeline_events = profile.timeline_events if profile.timeline_events else []
+
+    return render_template('view_profile.html', profile=profile, timeline_events=timeline_events)
 
 @app.route('/edit_profile/<int:profile_id>', methods=['GET', 'POST'])
 @login_required
