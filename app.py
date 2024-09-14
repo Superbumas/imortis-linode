@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, flash, request, session, abort
+from flask import Flask, render_template, redirect, url_for, flash, request, session, abort, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask_wtf import FlaskForm
@@ -13,6 +13,7 @@ from extensions import db
 from forms import DeleteProfileForm, EditProfileForm, EditTimelineForm, RegistrationForm, LoginForm, TimelineForm, SettingsForm, CreateProfileForm, TimelineEventForm
 from models import User, Profile
 from flask_wtf.csrf import CSRFProtect
+from flask_cors import CORS
 
 
 # Flask app configuration
@@ -25,6 +26,7 @@ app.config['ALLOWED_EXTENSIONS'] = {'jpg', 'png', 'jpeg'}
 # Initialize extensions
 db.init_app(app)
 csrf = CSRFProtect(app)  # Initialize CSRF protection after app is created
+CORS(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 
@@ -226,46 +228,24 @@ def api_profiles():
     try:
         profiles = Profile.query.filter_by(user_id=current_user.id).all()
         profiles_data = [
-            {
-                "id": profile.id,
-                "name": profile.name,
-                "bio": profile.bio,
-                "date_of_birth": profile.date_of_birth.strftime('%Y-%m-%d'),
-                "date_of_death": profile.date_of_death.strftime('%Y-%m-%d'),
-                "timelines": [
-                    {
-                        "date": timeline.date.strftime('%Y-%m-%d'),
-                        "event": timeline.event
-                    } for timeline in profile.timelines
-                ]
-            } for profile in profiles
+               {
+                   "id": profile.id,
+                   "name": profile.name,
+                   "bio": profile.bio,
+                   "date_of_birth": profile.date_of_birth.strftime('%Y-%m-%d'),
+                   "date_of_death": profile.date_of_death.strftime('%Y-%m-%d'),
+                   "timelines": [
+                       {
+                           "date": timeline.date.strftime('%Y-%m-%d'),
+                           "event": timeline.event
+                       } for timeline in profile.timelines
+                   ]
+               } for profile in profiles
         ]
         return jsonify(profiles_data)
     except Exception as e:
         app.logger.error(f"Error fetching profiles: {e}")
         return jsonify({"error": "Internal Server Error"}), 500
-
-# Utility functions
-def generate_qr(data, filename):
-    qr = qrcode.QRCode(
-        version=1,
-        error_correction=qrcode.constants.ERROR_CORRECT_L,
-        box_size=10,
-        border=4,
-    )
-    qr.add_data(data)
-    qr.make(fit=True)
-    img = qr.make_image(fill='black', back_color='white')
-    
-    # Ensure the directory exists
-    qr_code_dir = os.path.join(app.config['UPLOAD_FOLDER'], 'qr_codes')
-    os.makedirs(qr_code_dir, exist_ok=True)
-    
-    # Save the image
-    file_path = os.path.join(qr_code_dir, filename)
-    img.save(file_path)
-    
-    return file_path
 
 @app.route('/settings', methods=['GET', 'POST'])
 @login_required

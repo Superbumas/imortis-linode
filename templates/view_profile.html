@@ -38,152 +38,33 @@
         <div class="mt-6">
             <div id="timeline" class="tab-content">
                 <h3 class="text-xl font-bold mb-2">Life Timeline</h3>
-                {% if timeline_events %}
-                    <ul class="list-none m-0 p-0">
-                        {% for event in timeline_events %}
-                            <li class="mb-8">
-                                <div class="bg-white p-6 rounded-lg shadow-md">
-                                    <div class="flex justify-between items-center">
-                                        <div class="text-gray-500">{{ event.event_date }}</div>
-                                        <div class="text-left">
-                                            <h4 class="font-bold text-lg text-gray-900">{{ event.event_text }}</h4>
-                                            <button class="text-orange-500 hover:text-orange-700 mt-2">More details</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                {% else %}
-                    <div class="flex flex-col items-center justify-center mt-10">
-                        <svg class="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 4h10a2 2 0 012 2v10a2 2 0 01-2 2H7a2 2 0 01-2-2V9a2 2 0 012-2zm3 4h4m-4 4h4"></path>
-                        </svg>
-                        <h2 class="mt-4 text-xl font-semibold text-gray-700">No timeline events found</h2>
-                        <p class="mt-2 text-gray-500">No events have been added yet in {{ profile.first_name }} {{ profile.last_name }}'s timeline.</p>
-                    </div>
-                {% endif %}
+                <div id="vue-timeline"></div>
             </div>
             <div id="bio" class="tab-content hidden">
-                <h3 class="text-xl font-bold mb-2">Bio</h3>
-                <p class="text-gray-700">{{ profile.bio }}</p>
+                <p>{{ profile.bio }}</p>
             </div>
             <div id="media" class="tab-content hidden">
-                <h3 class="text-xl font-bold mb-2">Media</h3>
-                <div class="grid grid-cols-2 gap-4">
-                    {% if profile.profile_picture %}
-                        <img src="{{ url_for('static', filename='uploads/' ~ profile.profile_picture) }}" alt="Profile Picture" class="w-full h-48 object-cover rounded-lg lightbox-trigger">
-                    {% else %}
-                        <div class="w-full h-48 bg-gray-200 rounded-lg"></div>
-                    {% endif %}
-                    {% if profile.cover_photo %}
-                        <img src="{{ url_for('static', filename='uploads/' ~ profile.cover_photo) }}" alt="Cover Photo" class="w-full h-48 object-cover rounded-lg lightbox-trigger">
-                    {% else %}
-                        <div class="w-full h-48 bg-gray-200 rounded-lg"></div>
-                    {% endif %}
-                </div>
+                <!-- Media content here -->
             </div>
             <div id="tributes" class="tab-content hidden">
-                <h3 class="text-xl font-bold mb-2">Tributes</h3>
-                <!-- Add tributes content here -->
+                <!-- Tributes content here -->
             </div>
         </div>
     </div>
 </div>
 
-<!-- Lightbox HTML -->
-<div id="lightbox" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75 hidden">
-    <div class="relative max-w-3xl w-full">
-        <span id="lightbox-close" class="absolute top-4 right-4 text-white text-3xl cursor-pointer">&times;</span>
-        <img id="lightbox-img" src="" alt="" class="w-full h-auto">
-    </div>
-</div>
+<script src="https://cdn.jsdelivr.net/npm/vue@next"></script>
+<script src="https://unpkg.com/lucide-vue-next"></script>
+<script type="module">
+import { createApp } from 'vue';
+import ProfileTimeline from './components/ProfileTimeline.vue';
 
-<!-- Share Dialog HTML -->
-<div id="share-dialog" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75 hidden">
-    <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
-        <h2 class="text-xl font-bold mb-4">Share this profile</h2>
-        <div class="mb-4">
-            <input id="share-url" type="text" class="w-full p-2 border border-gray-300 rounded" value="{{ request.url }}" readonly>
-        </div>
-        <div class="flex justify-between space-x-4">
-            <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.url }}" target="_blank" class="text-blue-600 hover:text-blue-800 text-3xl"><i class="fab fa-facebook"></i></a>
-            <a href="https://twitter.com/intent/tweet?url={{ request.url }}&text=Check out this profile on our site." target="_blank" class="text-blue-400 hover:text-blue-600 text-3xl"><i class="fab fa-twitter"></i></a>
-            <a href="mailto:?subject=Check out this profile&body={{ request.url }}" class="text-red-600 hover:text-red-800 text-3xl"><i class="fas fa-envelope"></i></a>
-            <button id="copy-url" class="text-gray-500 hover:text-gray-700 text-3xl"><i class="fas fa-link"></i></button>
-        </div>
-        <div class="flex justify-end mt-4">
-            <button id="close-share-dialog" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Close</button>
-        </div>
-    </div>
-</div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const tabLinks = document.querySelectorAll('.tab-link');
-        const tabContents = document.querySelectorAll('.tab-content');
-        const lightbox = document.getElementById('lightbox');
-        const lightboxImg = document.getElementById('lightbox-img');
-        const lightboxClose = document.getElementById('lightbox-close');
-        const shareButton = document.getElementById('share-button');
-        const shareDialog = document.getElementById('share-dialog');
-        const closeShareDialog = document.getElementById('close-share-dialog');
-        const copyUrlButton = document.getElementById('copy-url');
-        const shareUrlInput = document.getElementById('share-url');
-
-        tabLinks.forEach(link => {
-            link.addEventListener('click', function(event) {
-                event.preventDefault();
-                const targetTab = this.getAttribute('data-tab');
-
-                tabLinks.forEach(link => link.classList.remove('text-yellow-500', 'border-b-2', 'border-yellow-500'));
-                this.classList.add('text-yellow-500', 'border-b-2', 'border-yellow-500');
-
-                tabContents.forEach(content => content.classList.add('hidden'));
-                document.getElementById(targetTab).classList.remove('hidden');
-            });
-        });
-
-        document.querySelectorAll('.lightbox-trigger').forEach(image => {
-            image.addEventListener('click', function() {
-                lightboxImg.src = this.src;
-                lightboxImg.alt = this.alt;
-                lightbox.classList.remove('hidden');
-            });
-        });
-
-        lightboxClose.addEventListener('click', function() {
-            lightbox.classList.add('hidden');
-        });
-
-        // Show the first tab by default
-        tabLinks[0].click();
-
-        // Share button functionality
-        shareButton.addEventListener('click', function() {
-            if (navigator.share) {
-                navigator.share({
-                    title: 'Profile of {{ profile.first_name }} {{ profile.last_name }}',
-                    text: 'Check out this profile on our site.',
-                    url: window.location.href
-                }).then(() => {
-                    console.log('Thanks for sharing!');
-                }).catch(console.error);
-            } else {
-                // Fallback for browsers that do not support the Web Share API
-                shareDialog.classList.remove('hidden');
-            }
-        });
-
-        closeShareDialog.addEventListener('click', function() {
-            shareDialog.classList.add('hidden');
-        });
-
-        copyUrlButton.addEventListener('click', function() {
-            shareUrlInput.select();
-            document.execCommand('copy');
-            alert('URL copied to clipboard. You can now share it manually.');
-        });
-    });
+createApp({
+  components: {
+    ProfileTimeline
+  },
+  template: '<ProfileTimeline :profileId="{{ profile.id }}" />'
+}).mount('#vue-timeline');
 </script>
+
 {% endblock %}
