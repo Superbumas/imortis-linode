@@ -14,7 +14,7 @@ import logging
 import io
 
 from extensions import db
-from forms import DeleteProfileForm, ProfileForm, EditProfileForm, EditTimelineForm, RegistrationForm, LoginForm, TimelineForm, SettingsForm, CreateProfileForm
+from forms import DeleteProfileForm, ProfileForm, EditProfileForm, EditTimelineForm, RegistrationForm, LoginForm, TimelineForm, SettingsForm, CreateProfileForm, TimelineEventForm
 from models import User, Profile, TimelineEvent
 from flask_wtf.csrf import CSRFProtect
 
@@ -24,6 +24,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'ThisIsASecretKey'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
+app.config['ALLOWED_EXTENSIONS'] = {'jpg', 'png', 'jpeg'}
 
 # Initialize extensions
 db.init_app(app)
