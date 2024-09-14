@@ -149,6 +149,9 @@ def view_profile(profile_id):
     # Access timeline events directly from the profile
     timeline_events = profile.timeline_events if profile.timeline_events else []
 
+    print("Profile Picture:", profile.profile_picture)  # Debugging statement
+    print("Cover Photo:", profile.cover_photo)  # Debugging statement
+
     return render_template('view_profile.html', profile=profile, timeline_events=timeline_events)
 
 @app.route('/edit_profile/<int:profile_id>', methods=['GET', 'POST'])
